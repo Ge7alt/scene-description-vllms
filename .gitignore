@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Jupyter Notebook checkpoints
+notebooks/
+*.ipynb_checkpoints
+
+# Environment files
+.env
+.venv/
+env/
+venv/
+# environment.yml
+
+# VS Code settings
+.vscode/
+
+# Data and outputs
+data/
+data/
+outputs/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+

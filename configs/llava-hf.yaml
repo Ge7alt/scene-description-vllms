@@ -1,0 +1,27 @@
+# Model Configuration
+model:
+  id: "llava-hf/llava-1.5-7b-hf" # huggingface model ID
+  # For GPU: "cuda", for CPU: "cpu"
+  device: "cuda"
+  torch_dtype: "float16"
+
+# Data Paths
+paths:
+  image_folder: "data/val2017"
+  output_dir: "outputs"
+
+# Generation Parameters
+generation:
+  prompt: "USER: <image>\nProvide a detailed description of this image.\nASSISTANT:"
+  num_captions_per_image: 3
+  max_new_tokens: 75
+  min_length: 20
+  do_sample: true
+  temperature: 0.7
+  top_k: 50
+  top_p: 0.95
+  repetition_penalty: 1.2
+  
+# Evaluation
+evaluation:
+  reference_captions_path: data/captions_val2017.json

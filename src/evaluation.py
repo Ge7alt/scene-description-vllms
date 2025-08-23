@@ -1,8 +1,12 @@
 import json
+import torch
 import evaluate
 from pathlib import Path
 from typing import Dict, List, Optional
 from utils import setup_logger
+from PIL import Image
+import numpy as np
+from torchmetrics.multimodal.clip_score import CLIPScore
 
 logger = setup_logger()
 
@@ -46,8 +50,50 @@ def load_coco_references(reference_path: str) -> Dict[str, List[str]]:
             
     return filename_to_captions
 
-def calculate_evaluation_metrics(
-    generated_captions: Dict[str, List[str]],
+def calculate_clip_score(
+    generated_captions_map: Dict[str, List[str]],
+    image_folder: str
+) -> Dict[str, float]:
+    """
+    Calculates the CLIPScore for a set of images and generated captions.
+    This is a reference-free metric.
+    """
+    logger.info("Calculating CLIPScore...")
+    results = {}
+    
+    # Prepare data for CLIPScore ---
+    image_paths = []
+    predictions_flat = []
+    for img_name, gen_caps in generated_captions_map.items():
+        image_path = Path(image_folder) / img_name
+        if image_path.exists():
+            image_paths.append(str(image_path))
+            # Use the first generated caption for a standard comparison
+            predictions_flat.append(gen_caps[0])
+
+    if not image_paths:
+        logger.warning("No images found for CLIPScore calculation.")
+        return {"clip_score_error": "No matching images found."}
+
+    # Calculate CLIPScore 
+    try:
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+        metric = CLIPScore(model_name_or_path="openai/clip-vit-base-patch16").to(device)
+        
+        images = [Image.open(path).convert("RGB") for path in image_paths]
+        img_tensors = [torch.from_numpy(np.array(img)).permute(2, 0, 1) for img in images]
+
+        metric.update(img_tensors, predictions_flat)
+        clip_score = metric.compute()
+        results["clip_score"] = round(clip_score.item(), 4)
+    except Exception as e:
+        logger.error(f"An error occurred during CLIPScore calculation: {e}")
+        results["clip_score_error"] = str(e)
+        
+    return results
+
+def calculate_reference_based_metrics(
+    generated_captions_map: Dict[str, List[str]],
     reference_captions_path: Optional[str]
 ) -> Optional[Dict[str, float]]:
     """
@@ -66,7 +112,8 @@ def calculate_evaluation_metrics(
     # Align predictions and references based on image filenames
     predictions_flat = []
     references_flat = []
-    for img_name, gen_caps in generated_captions.items():
+    image_paths_for_clip = []
+    for img_name, gen_caps in generated_captions_map.items():
         if img_name in references:
             # We use the first generated caption for a standard comparison
             predictions_flat.append(gen_caps[0])

@@ -10,7 +10,7 @@ from data_loader import get_image_paths, load_image
 from model_handler import load_model, generate_captions
 from performance import PerformanceTracker
 from visualization import visualize_and_save
-from evaluation import calculate_evaluation_metrics
+from evaluation import calculate_clip_score, calculate_reference_based_metrics
 
 def main():
     """Main function to run the image captioning pipeline."""
@@ -98,16 +98,40 @@ def main():
     logger.info(f"Results saved to {output_json_path}")
 
     # =================== Final Evaluation ===================
-    eval_metrics = calculate_evaluation_metrics(
-        {k: v["captions"] for k, v in results["per_image_metrics"].items()},
-        config.evaluation.reference_captions_path
+    logger.info("Starting final evaluation...")
+    
+    # Prepare generated captions in the required format
+    generated_captions_map = {
+        k: v["captions"] for k, v in results["per_image_metrics"].items()
+    }
+    
+    # Dictionary to hold all evaluation scores
+    final_eval_metrics = {}
+
+    # Calculate CLIPScore (reference-free)
+    clip_scores = calculate_clip_score(
+        generated_captions_map=generated_captions_map,
+        image_folder=config.paths.image_folder
     )
-    if eval_metrics:
+    final_eval_metrics.update(clip_scores)
+
+    # Calculate reference-based metrics
+    if config.evaluation.get("reference_captions_path"):
+        ref_metrics = calculate_reference_based_metrics(
+            generated_captions_map=generated_captions_map,
+            reference_captions_path=config.evaluation.reference_captions_path
+        )
+        final_eval_metrics.update(ref_metrics)
+    else:
+        logger.warning("No reference_captions_path in config. Skipping reference-based metrics.")
+
+    # Save the combined evaluation summary
+    if final_eval_metrics:
         eval_output_path = output_path / "evaluation_summary.json"
         with open(eval_output_path, 'w') as f:
-            json.dump(eval_metrics, f, indent=4)
+            json.dump(final_eval_metrics, f, indent=4)
         logger.info(f"Evaluation summary saved to {eval_output_path}")
-        logger.info(f"Evaluation Metrics: {eval_metrics}")
+        logger.info(f"Combined Evaluation Metrics: {final_eval_metrics}")
             
     logger.info("Pipeline finished successfully.")
 

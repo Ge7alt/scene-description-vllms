@@ -28,5 +28,6 @@ dependencies:
     - tokenizers==0.21.4
     - torch==2.8.0+cu126
     - torchvision==0.23.0+cu126
+    - torchmetrics==1.8.1
     - tqdm==4.67.1
     - transformers==4.55.2

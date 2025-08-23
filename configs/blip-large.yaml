@@ -2,6 +2,7 @@
 model:
   id: "Salesforce/blip-image-captioning-large"
   # For GPU: "cuda", for CPU: "cpu"
+  type: "blip"
   device: "cuda"
   # Use float16 for faster inference and less memory on GPU
   torch_dtype: "float16"

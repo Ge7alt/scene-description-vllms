@@ -2,6 +2,7 @@
 model:
   id: "Salesforce/blip-image-captioning-base"
   # For GPU: "cuda", for CPU: "cpu"
+  type: "blip"
   device: "cuda"
   # Use float16 for faster inference and less memory on GPU
   torch_dtype: "float16"
@@ -25,11 +26,6 @@ generation:
   top_p: 0.95
   repetition_penalty: 1.2
 
-# Experiment Tracking
-tracking:
-  enable_wandb: true
-  wandb_project: "Image Captioning Technical Task"
-  wandb_entity: null # Your W&B username or team, or null
 
 # Evaluation - Requires a ground truth JSON file
 evaluation:

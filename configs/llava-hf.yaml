@@ -1,6 +1,7 @@
 # Model Configuration
 model:
   id: "llava-hf/llava-1.5-7b-hf" # huggingface model ID
+  type: "llava"
   # For GPU: "cuda", for CPU: "cpu"
   device: "cuda"
   torch_dtype: "float16"
@@ -12,7 +13,7 @@ paths:
 
 # Generation Parameters
 generation:
-  prompt: "USER: <image>\nProvide a detailed description of this image.\nASSISTANT:"
+  prompt: "Provide a detailed description of this image:"
   num_captions_per_image: 3
   max_new_tokens: 75
   min_length: 20

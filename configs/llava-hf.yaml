@@ -13,7 +13,11 @@ paths:
 
 # Generation Parameters
 generation:
-  prompt: "Provide a detailed description of this image:"
+  prompt: |
+    You are a precise and objective image analyst. Your task is to describe exactly what you see in the image. 
+    List only the visible facts, including people, objects, the setting, and any actions. 
+    Do not make assumptions, infer relationships, or guess at what might be happening outside the frame. 
+    Provide a direct, factual description. Ensure your description ends in a complete sentence.
   num_captions_per_image: 3
   max_new_tokens: 75
   min_length: 20

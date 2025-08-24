@@ -21,7 +21,8 @@ venv/
 
 # Data and outputs
 data/
-data/
+datasets/
+/datasets/*
 outputs/
 *.log
 

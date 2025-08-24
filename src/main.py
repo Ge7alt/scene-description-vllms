@@ -10,7 +10,16 @@ from data_loader import get_image_paths, load_image
 from model_handler import load_model, generate_captions
 from performance import PerformanceTracker
 from visualization import visualize_and_save
-from evaluation import calculate_clip_score, calculate_reference_based_metrics
+# from evaluation import calculate_clip_score, calculate_reference_based_metrics
+import torch
+import random
+from datasets import load_dataset
+
+
+SEED = 42
+random.seed(SEED)
+np.random.seed(SEED)
+torch.manual_seed(SEED)
 
 def main():
     """Main function to run the image captioning pipeline."""
@@ -19,7 +28,27 @@ def main():
         "--config",
         type=str,
         required=True,
-        help="Path to the configuration file for the experiment."
+        help="Path to the YAML model configuration file."
+    )
+    parser.add_argument(
+        "--dataset",
+        type=str,
+        required=True,
+        choices=["coco", "nocaps"],
+        help="Dataset to use: 'coco' or 'nocaps'."
+    )
+    parser.add_argument(
+        "--nocaps_split",
+        type=str,
+        default="validation",
+        choices=["validation", "test"],
+        help="Split for NoCaps dataset if selected."
+    )
+    parser.add_argument(
+        "--coco_path",
+        type=str,
+        default=None,
+        help="Path to COCO images (required if dataset==coco)."
     )
     args = parser.parse_args()
     # breakpoint()
@@ -30,13 +59,14 @@ def main():
     
     # Create a unique output directory based on the model name from the config
     model_name_path = config.model.id.replace("/", "_")
+    dataset_name = Path(args.dataset).name
     run_timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    output_path = Path(config.paths.output_dir) / f"{model_name_path}_{run_timestamp}"
+    output_path = Path(config.paths.output_dir) / f"{model_name_path}_{dataset_name}_{run_timestamp}"
     viz_path = output_path / "visualizations"
     output_path.mkdir(parents=True, exist_ok=True)
     viz_path.mkdir(exist_ok=True)
     
-    # ========= Load Model and Data =========
+    # ========= Load Model  =========
     logger.info(f"Loading model specified in: {args.config}")
     logger.info(f'Model Type: {config.model.type}')
     logger.info(f"Model ID: {config.model.id}")
@@ -46,17 +76,41 @@ def main():
         config.model.device, 
         config.model.torch_dtype
     )
-    
-    logger.info(f"Loading images from: {config.paths.image_folder}")
-    image_paths = get_image_paths(config.paths.image_folder)
-    
+    # ========= Load Data =========
+    if args.dataset == "coco":
+        if not args.coco_path:
+            raise ValueError("For COCO dataset, --coco_path must be provided.")
+        logger.info(f"Loading COCO images from {args.coco_path}")
+        image_items = get_image_paths(args.coco_path)
+
+    elif args.dataset == "nocaps":
+        logger.info(f"Loading NoCaps dataset ({args.nocaps_split} split) from HuggingFace")
+        nocaps_ds = load_dataset("HuggingFaceM4/NoCaps", split=args.nocaps_split)
+        # Store images and filenames in a list
+        image_items = [(item["image"], item["image_file_name"]) for item in nocaps_ds]
+
+    # logger.info(f"Loading images from: {config.paths.image_folder}")
+    # image_items = get_image_paths(config.paths.image_folder)
+    # images_to_process = random.sample(image_items, 100) if len(image_items) > 100 else image_items
+    images_to_process = random.sample(image_items, 1) if len(image_items) > 1 else image_items
+
     # ========= Main Generation Loop =========
     results = {"per_image_metrics": {}}
     results["model_name"] = config.model.id
     with PerformanceTracker(device=config.model.device) as tracker:
-        for i, image_path in enumerate(image_paths[:5]):
-            logger.info(f"Processing image {i+1}/{len(image_paths)}: {image_path.name}")
-            image = load_image(image_path)
+        for i, img_item in enumerate(images_to_process):
+            # logger.info(f"Processing image {i+1}/{len(image_items)}: {image_path.name}")
+            # image = load_image(image_path)
+            # Load image and assign an ID or name for both datasets
+            if args.dataset == "coco":
+                image_path = img_item
+                image = load_image(image_path)
+                image_id = image_path.name
+                logger.info(f"Processing COCO image {i+1}/{len(image_items)}: {image_id}")
+            elif args.dataset == "nocaps":
+                image, image_id = img_item  # img_item is (PIL.Image, filename)
+                logger.info(f"Processing NoCaps image {i+1}/{len(image_items)}: {image_id}")
+
             
             tracker.start()
             captions = generate_captions(
@@ -64,14 +118,15 @@ def main():
             )
             perf_metrics = tracker.stop()
             
-            results["per_image_metrics"][image_path.name] = {
+            results["per_image_metrics"][image_id] = {
                 "captions": captions,
                 "performance": perf_metrics
             }
             
-            viz_output_file = viz_path / f"{image_path.stem}.png"
-            visualize_and_save(image_path, captions, viz_output_file)
-
+            # Visualization
+            if i < 5:  # Limit to first 5 images for visualization
+                viz_output_file = viz_path / f"{Path(image_id).stem}.png"
+                visualize_and_save(image, captions, viz_output_file)
     
     all_latencies = [
         v["performance"]["latency_ms"] 
@@ -98,40 +153,40 @@ def main():
     logger.info(f"Results saved to {output_json_path}")
 
     # =================== Final Evaluation ===================
-    logger.info("Starting final evaluation...")
+    # logger.info("Starting final evaluation...")
     
-    # Prepare generated captions in the required format
-    generated_captions_map = {
-        k: v["captions"] for k, v in results["per_image_metrics"].items()
-    }
+    # # Prepare generated captions in the required format
+    # generated_captions_map = {
+    #     k: v["captions"] for k, v in results["per_image_metrics"].items()
+    # }
     
-    # Dictionary to hold all evaluation scores
-    final_eval_metrics = {}
+    # # Dictionary to hold all evaluation scores
+    # final_eval_metrics = {}
 
-    # Calculate CLIPScore (reference-free)
-    clip_scores = calculate_clip_score(
-        generated_captions_map=generated_captions_map,
-        image_folder=config.paths.image_folder
-    )
-    final_eval_metrics.update(clip_scores)
+    # # Calculate CLIPScore (reference-free)
+    # clip_scores = calculate_clip_score(
+    #     generated_captions_map=generated_captions_map,
+    #     image_folder=config.paths.image_folder
+    # )
+    # final_eval_metrics.update(clip_scores)
 
-    # Calculate reference-based metrics
-    if config.evaluation.get("reference_captions_path"):
-        ref_metrics = calculate_reference_based_metrics(
-            generated_captions_map=generated_captions_map,
-            reference_captions_path=config.evaluation.reference_captions_path
-        )
-        final_eval_metrics.update(ref_metrics)
-    else:
-        logger.warning("No reference_captions_path in config. Skipping reference-based metrics.")
+    # # Calculate reference-based metrics
+    # if config.evaluation.get("reference_captions_path"):
+    #     ref_metrics = calculate_reference_based_metrics(
+    #         generated_captions_map=generated_captions_map,
+    #         reference_captions_path=config.evaluation.reference_captions_path
+    #     )
+    #     final_eval_metrics.update(ref_metrics)
+    # else:
+    #     logger.warning("No reference_captions_path in config. Skipping reference-based metrics.")
 
-    # Save the combined evaluation summary
-    if final_eval_metrics:
-        eval_output_path = output_path / "evaluation_summary.json"
-        with open(eval_output_path, 'w') as f:
-            json.dump(final_eval_metrics, f, indent=4)
-        logger.info(f"Evaluation summary saved to {eval_output_path}")
-        logger.info(f"Combined Evaluation Metrics: {final_eval_metrics}")
+    # # Save the combined evaluation summary
+    # if final_eval_metrics:
+    #     eval_output_path = output_path / "evaluation_summary.json"
+    #     with open(eval_output_path, 'w') as f:
+    #         json.dump(final_eval_metrics, f, indent=4)
+    #     logger.info(f"Evaluation summary saved to {eval_output_path}")
+    #     logger.info(f"Combined Evaluation Metrics: {final_eval_metrics}")
             
     logger.info("Pipeline finished successfully.")
 

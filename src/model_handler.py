@@ -8,7 +8,9 @@ from transformers import (
 )
 from PIL.Image import Image
 from omegaconf import DictConfig
+from utils import setup_logger
 
+logger = setup_logger()
 
 def load_model(
     model_id: str, model_type: str, device: str, dtype_str: str
@@ -34,13 +36,13 @@ def load_model(
         ).to(device)
 
     elif model_type == "blip2":
-        processor = Blip2Processor.from_pretrained(model_id)
+        processor = Blip2Processor.from_pretrained(model_id, use_fast=True)
         model = Blip2ForConditionalGeneration.from_pretrained(
             model_id, torch_dtype=dtype, device_map='auto'
         ).to(device)
 
     elif model_type == "llava":
-        processor = AutoProcessor.from_pretrained(model_id)
+        processor = AutoProcessor.from_pretrained(model_id, use_fast=True)
         model = LlavaForConditionalGeneration.from_pretrained(
             model_id, torch_dtype=dtype, device_map='auto'
         ).to(device)
@@ -78,7 +80,8 @@ def prepare_inputs(processor, image, prompt, model_type, device, dtype):
             },
         ]
         chat_prompt = processor.apply_chat_template(conversation, add_generation_prompt=True)
-        return processor(images=image, text=chat_prompt, return_tensors="pt").to(device, dtype)
+        inputs = processor(images=image, text=chat_prompt, return_tensors="pt").to(device, dtype)
+        return inputs
 
     # # --- Qwen-VL ---
     # elif model_type == "qwen":
@@ -145,11 +148,27 @@ def generate_captions(
     )
 
     generated_texts = processor.batch_decode(generated_ids, skip_special_tokens=True)
-
+    logger.info(f"Raw generated texts: {generated_texts}")
     # Clean outputs
+    # captions = []
+    # for text in generated_texts:
+    #     clean_text = text.replace(prompt, "") if prompt else text
+    #     captions.append(clean_text.strip())
+
+    # return captions
     captions = []
     for text in generated_texts:
-        clean_text = text.replace(prompt, "") if prompt else text
-        captions.append(clean_text.strip())
+        if model_type == "llava":
+            # Split the output by "ASSISTANT:" and take the last part.
+            parts = text.split("ASSISTANT:")
+            if len(parts) > 1:
+                clean_text = parts[-1].strip()
+            else:
+                # If for some reason the marker isn't there, use the whole text
+                clean_text = text.strip()
+        else:
+            clean_text = text.replace(prompt, "") if prompt else text
+    
+        captions.append(clean_text)
 
     return captions

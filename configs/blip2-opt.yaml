@@ -1,0 +1,28 @@
+# Model Configuration
+model:
+  id: "Salesforce/blip2-opt-2.7b"
+  # For GPU: "cuda", for CPU: "cpu"
+  type: "blip2"
+  device: "cuda"
+  # Use float16 for faster inference and less memory on GPU
+  torch_dtype: "float16"
+
+# Data Paths
+paths:
+  image_folder: "data/val2017"
+  output_dir: "outputs"
+
+
+# Generation Parameters
+generation:
+  # A general prompt to guide the model. Set to null for unconditional generation.
+  # prompt: "A factual and objective description of the image:"
+  prompt: "Question: Describe only what is clearly visible in the image. Do not guess or add details. Answer:"
+  num_captions_per_image: 3
+  max_new_tokens: 75
+  min_length: 20
+  do_sample: true
+  temperature: 0.7
+  top_k: 50
+  top_p: 0.95
+  repetition_penalty: 1.2

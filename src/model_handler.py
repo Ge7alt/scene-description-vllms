@@ -28,7 +28,17 @@ def load_model(
     Returns:
         (processor, model)
     """
-    dtype = torch.float16 if dtype_str == "float16" and device == "cuda" else torch.float32
+    dtype = torch.float32 # default
+    if device == "cuda" and torch.cuda.is_available():
+        if dtype_str == "bfloat16":
+            if torch.cuda.is_bf16_supported():
+                dtype = torch.bfloat16
+                logger.info("Using bfloat16 precision on CUDA.")
+            else:
+                logger.warning("bfloat16 is not supported on this device, falling back to float16.")
+                dtype = torch.float16
+        elif dtype_str == "float16":
+            dtype = torch.float16
 
     if model_type == "blip":
         processor = BlipProcessor.from_pretrained(model_id, use_fast=True)

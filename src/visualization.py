@@ -10,7 +10,7 @@ def visualize_and_save(
 ):
     """Displays an image and its captions, then saves the figure."""
     # image = Image.open(image_path)
-    # If a Path is passed, open the image; else assume it's already a PIL Image
+
     plt.figure(figsize=(8, 10))
     plt.imshow(image)
     plt.axis('off')

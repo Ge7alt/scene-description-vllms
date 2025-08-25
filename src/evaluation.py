@@ -49,7 +49,7 @@ def load_nocaps_references(split: str) -> Dict[str, List[str]]:
     filename_to_captions = {}
     for item in dataset:
         filename = item['image_file_name']
-        # The 'annotations_nocaps' field contains the list of reference captions
+
         captions = [ann['caption'] for ann in item['annotations_nocaps']]
         if filename not in filename_to_captions:
             filename_to_captions[filename] = []
@@ -132,8 +132,8 @@ def calculate_clip_score(
         images = [Image.open(path).convert("RGB") for path in image_paths]
         img_tensors = [torch.from_numpy(np.array(img)).permute(2, 0, 1) for img in images]
 
-        metric.update(img_tensors, predictions_flat)
-        clip_score = metric.compute()
+        # metric.update(img_tensors, predictions_flat)
+        clip_score = metric(img_tensors, predictions_flat)
         results["clip_score"] = round(clip_score.item(), 4)
     except Exception as e:
         logger.error(f"An error occurred during CLIPScore calculation: {e}")

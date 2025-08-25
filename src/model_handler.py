@@ -1,10 +1,11 @@
 from typing import List, Tuple
 import torch
 from transformers import (
+    BitsAndBytesConfig,
     BlipProcessor, BlipForConditionalGeneration,
     Blip2Processor, Blip2ForConditionalGeneration,
     AutoProcessor, AutoModelForVision2Seq,
-    LlavaForConditionalGeneration
+    LlavaForConditionalGeneration, Qwen2_5_VLForConditionalGeneration
 )
 from PIL.Image import Image
 from omegaconf import DictConfig
@@ -32,35 +33,54 @@ def load_model(
     if model_type == "blip":
         processor = BlipProcessor.from_pretrained(model_id, use_fast=True)
         model = BlipForConditionalGeneration.from_pretrained(
-            model_id, torch_dtype=dtype, device_map='auto'
-        ).to(device)
+            model_id, torch_dtype=dtype, 
+            device_map='auto'
+        )
 
     elif model_type == "blip2":
         processor = Blip2Processor.from_pretrained(model_id, use_fast=True)
         model = Blip2ForConditionalGeneration.from_pretrained(
-            model_id, torch_dtype=dtype, load_in_8bit=True, device_map='auto'
+            model_id, torch_dtype=dtype, 
+            device_map='auto'
         ).to(device)
 
     elif model_type == "llava":
         processor = AutoProcessor.from_pretrained(model_id, use_fast=True)
         model = LlavaForConditionalGeneration.from_pretrained(
-            model_id, torch_dtype=dtype, device_map='auto'
-        ).to(device)
+            model_id, torch_dtype=dtype, 
+            device_map='auto'
+        )
+
+    elif model_type == "qwen":
+        bnb_config = BitsAndBytesConfig(load_in_8bit=True,)
+        processor = processor = AutoProcessor.from_pretrained(model_id, use_fast=True)
+        model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
+            model_id, quantization_config=bnb_config, 
+            device_map='auto',
+            # attn_implementation="flash_attention_2"
+        )
+
+    elif model_type == "smolvlm":
+        processor = AutoProcessor.from_pretrained(model_id)
+        model = AutoModelForVision2Seq.from_pretrained(
+            model_id, torch_dtype=dtype, 
+            device_map='auto'
+        )
 
     else:  # generic fallback
         processor = AutoProcessor.from_pretrained(model_id, use_fast=True)
         model = AutoModelForVision2Seq.from_pretrained(
-            model_id, torch_dtype=dtype, device_map='auto'
-        ).to(device)
+            model_id, torch_dtype=dtype, 
+            device_map='auto'
+        )
 
     return processor, model
 
 def prepare_inputs(processor, image, prompt, model_type, device, dtype):
     """
-    Normalize inputs across BLIP, BLIP2, LLaVA, Qwen-VL families.
+    Normalize inputs across BLIP, BLIP2, LLaVA, SmolVLM Qwen-VL families.
     """
-    # --- LLaVA ---
-    if model_type == "llava":
+    if model_type in ["llava", "smolvlm"]:
         conversation = [
             {
                 "role": "user",
@@ -74,29 +94,27 @@ def prepare_inputs(processor, image, prompt, model_type, device, dtype):
         inputs = processor(images=image, text=chat_prompt, return_tensors="pt").to(device, dtype)
         return inputs
 
-    # # --- Qwen-VL ---
-    # elif model_type == "qwen":
-    #     from qwen_vl_utils import process_vision_info
+    elif model_type == "qwen":
+        from qwen_vl_utils import process_vision_info
 
-    #     messages = [
-    #         {
-    #             "role": "user",
-    #             "content": [
-    #                 {"type": "image", "image": image},
-    #                 {"type": "text", "text": prompt},
-    #             ],
-    #         }
-    #     ]
-    #     text = processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-    #     image_inputs, video_inputs = process_vision_info(messages)
-    #     inputs = processor(
-    #         text=[text],
-    #         images=image_inputs,
-    #         videos=video_inputs,
-    #         padding=True,
-    #         return_tensors="pt",
-    #     )
-    #     return inputs.to(device)
+        messages = [
+            {
+                "role": "user",
+                "content": [
+                    {"type": "image", "image": image},
+                    {"type": "text", "text": prompt},
+                ],
+            }
+        ]
+        text = processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+        image_inputs, _ = process_vision_info(messages)
+        inputs = processor(
+            text=[text],
+            images=image_inputs,
+            padding=True,
+            return_tensors="pt",
+        )
+        return inputs.to(device)
 
     else:
         # Generic processor call
@@ -112,7 +130,7 @@ def generate_captions(
     processor: AutoProcessor,
     generation_config: DictConfig,
     device: str,
-) -> List[str]:
+) -> Tuple[List[str], int]:
     """
     Generate captions for an image using a given model.
     Keeps generation arguments consistent across model families.
@@ -126,7 +144,7 @@ def generate_captions(
         device=device,
         dtype=model.dtype,
     )
-
+    input_token_length = inputs.input_ids.shape[1]
     # Unified generation call
     generated_ids = model.generate(
         **inputs,
@@ -140,28 +158,40 @@ def generate_captions(
         repetition_penalty=generation_config.repetition_penalty,
     )
 
-    generated_texts = processor.batch_decode(generated_ids, skip_special_tokens=True)
-    logger.info(f"Raw generated texts: {generated_texts}")
+    if model_type == "qwen":
+        # Qwen-VL generates some extra tokens at the end; trim to max_new_tokens
+        generated_ids_trimmed = [
+             out_ids[len(inputs.input_ids[0]):] for out_ids in generated_ids
+        ]
+
+        generated_texts = processor.batch_decode(generated_ids_trimmed, skip_special_tokens=True, clean_up_tokenization_spaces=False)
+
+    else:
+        generated_texts = processor.batch_decode(generated_ids, skip_special_tokens=True)
+    # logger.info(f"Raw generated texts: {generated_texts}")
     # Clean outputs
     # captions = []
     # for text in generated_texts:
     #     clean_text = text.replace(prompt, "") if prompt else text
     #     captions.append(clean_text.strip())
+    num_new_tokens = len(generated_ids[0]) - input_token_length
 
     # return captions
     captions = []
+    # breakpoint()
     for text in generated_texts:
         if model_type == "llava":
             # Split the output by "ASSISTANT:" and take the last part.
             parts = text.split("ASSISTANT:")
             if len(parts) > 1:
                 clean_text = parts[-1].strip()
-            else:
-                # If for some reason the marker isn't there, use the whole text
-                clean_text = text.strip()
+        elif model_type == "smolvlm":
+            parts = text.split("Assistant:")
+            clean_text = parts[-1].strip()
+
         else:
             clean_text = text.replace(prompt, "") if prompt else text
     
         captions.append(clean_text)
 
-    return captions
+    return captions, num_new_tokens

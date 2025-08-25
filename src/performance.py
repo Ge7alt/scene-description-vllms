@@ -32,8 +32,17 @@ class PerformanceTracker:
         torch.cuda.synchronize()
         self.start_time = time.perf_counter()
 
-    def stop(self) -> Dict[str, Union[float, int]]:
-        """Stops the timer and records peak GPU memory."""
+    def stop(self, num_new_tokens: int = 0) -> Dict:
+        """
+        Stops the timer and calculates performance metrics.
+
+        Args:
+            num_new_tokens (int): The number of tokens generated in the call.
+        
+        Returns:
+            A dictionary with latency, memory usage, and throughput.
+        """
+
         if self.start_time is None:
             raise RuntimeError("Tracker was not started.")
 
@@ -46,10 +55,18 @@ class PerformanceTracker:
             peak_mem_bytes = torch.cuda.max_memory_allocated(self.device_index)
             peak_mem_used_mb = peak_mem_bytes / (1024 ** 2)
 
+        # Calculate throughput (tokens per second)
+        if latency > 0 and num_new_tokens > 0:
+            tokens_per_second = (num_new_tokens / latency) * 1000
+        else:
+            tokens_per_second = 0
+
         return {
             "latency_ms": latency,
-            "gpu_mem_used_mb": peak_mem_used_mb
+            "peak_gpu_mem_used_mb": peak_mem_used_mb,
+            "tokens_per_second": tokens_per_second,
         }
+
 
 if __name__ == "__main__":
     

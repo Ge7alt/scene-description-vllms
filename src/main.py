@@ -24,32 +24,10 @@ torch.manual_seed(SEED)
 def main():
     """Main function to run the image captioning pipeline."""
     parser = argparse.ArgumentParser(description="Run the image captioning pipeline.")
-    parser.add_argument(
-        "--config",
-        type=str,
-        required=True,
-        help="Path to the YAML model configuration file."
-    )
-    parser.add_argument(
-        "--dataset",
-        type=str,
-        required=True,
-        choices=["coco", "nocaps"],
-        help="Dataset to use: 'coco' or 'nocaps'."
-    )
-    parser.add_argument(
-        "--nocaps_split",
-        type=str,
-        default="validation",
-        choices=["validation", "test"],
-        help="Split for NoCaps dataset if selected."
-    )
-    parser.add_argument(
-        "--coco_path",
-        type=str,
-        default=None,
-        help="Path to COCO images (required if dataset==coco)."
-    )
+    parser.add_argument("--config", type=str, required=True,help="Path to the YAML model configuration file.")
+    parser.add_argument("--dataset", type=str, required=True, choices=["coco", "nocaps"], help="Dataset to use: 'coco' or 'nocaps'.")
+    parser.add_argument("--nocaps_split", type=str, default="validation", choices=["validation", "test"], help="Split for NoCaps dataset if selected.")
+    parser.add_argument("--coco_path", type=str, default=None, help="Path to COCO images (required if dataset==coco).")
     args = parser.parse_args()
     # breakpoint()
 
@@ -92,7 +70,7 @@ def main():
     # logger.info(f"Loading images from: {config.paths.image_folder}")
     # image_items = get_image_paths(config.paths.image_folder)
     # images_to_process = random.sample(image_items, 100) if len(image_items) > 100 else image_items
-    images_to_process = random.sample(image_items, 1) if len(image_items) > 1 else image_items
+    images_to_process = random.sample(image_items, 5) if len(image_items) > 1 else image_items
 
     # ========= Main Generation Loop =========
     results = {"per_image_metrics": {}}
@@ -113,10 +91,10 @@ def main():
 
             
             tracker.start()
-            captions = generate_captions(
+            captions, num_new_tokens = generate_captions(
                 image, model, config.model.type, processor, config.generation, config.model.device
             )
-            perf_metrics = tracker.stop()
+            perf_metrics = tracker.stop(num_new_tokens=num_new_tokens)
             
             results["per_image_metrics"][image_id] = {
                 "captions": captions,
@@ -128,18 +106,14 @@ def main():
                 viz_output_file = viz_path / f"{Path(image_id).stem}.png"
                 visualize_and_save(image, captions, viz_output_file)
     
-    all_latencies = [
-        v["performance"]["latency_ms"] 
-        for v in results["per_image_metrics"].values()
-    ]
-    all_gpu_usages = [
-        v["performance"]["gpu_mem_used_mb"] 
-        for v in results["per_image_metrics"].values()
-    ]
+    all_latencies = [v["performance"]["latency_ms"] for v in results["per_image_metrics"].values()]
+    all_gpu_usages = [v["performance"]["peak_gpu_mem_used_mb"] for v in results["per_image_metrics"].values()]
+    all_throughputs = [v["performance"]["tokens_per_second"] for v in results["per_image_metrics"].values()]
 
     summary_stats = {
         "average_latency_ms": np.mean(all_latencies),
-        "average_gpu_mem_used_mb": np.mean(all_gpu_usages),
+        "average_peak_gpu_mem_used_mb": np.mean(all_gpu_usages),
+        "average_tokens_per_second": np.mean(all_throughputs),
         "total_images_processed": len(all_latencies)
     }
     

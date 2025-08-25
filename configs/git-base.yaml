@@ -25,10 +25,3 @@ generation:
   top_p: 0.95
   repetition_penalty: 1.2
 
-
-# Evaluation - Requires a ground truth JSON file
-evaluation:
-  # Path to a JSON file with ground truth captions.
-  # Example format: {"image1.jpg": ["a photo of a cat", "a cat is sleeping"], ...}
-  # Set to null if you don't have reference captions.
-  reference_captions_path: data/captions_val2017.json

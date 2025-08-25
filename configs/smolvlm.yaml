@@ -1,14 +1,12 @@
 # Model Configuration
 model:
-  id: "llava-hf/llava-1.5-7b-hf" # huggingface model ID
-  type: "llava"
-  # For GPU: "cuda", for CPU: "cpu"
+  id: "HuggingFaceTB/SmolVLM-Instruct"
+  type: "smolvlm"
   device: "cuda"
-  torch_dtype: "bfloat16"
+  torch_dtype: "float16"
 
 # Data Paths
 paths:
-  image_folder: "data/val2017"
   output_dir: "outputs"
 
 # Generation Parameters
@@ -19,7 +17,7 @@ generation:
     Do not make assumptions, infer relationships, or guess at what might be happening outside the frame. 
     Provide a direct, factual description. Ensure your description ends in a complete sentence.
   num_captions_per_image: 3
-  max_new_tokens: 75
+  max_new_tokens: 150
   min_length: 20
   do_sample: true
   temperature: 0.2

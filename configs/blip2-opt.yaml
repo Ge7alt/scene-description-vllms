@@ -5,7 +5,7 @@ model:
   type: "blip2"
   device: "cuda"
   # Use float16 for faster inference and less memory on GPU
-  torch_dtype: "float16"
+  torch_dtype: "bfloat16"
 
 # Data Paths
 paths:
@@ -15,14 +15,12 @@ paths:
 
 # Generation Parameters
 generation:
-  # A general prompt to guide the model. Set to null for unconditional generation.
-  # prompt: "A factual and objective description of the image:"
-  prompt: "Question: Describe only what is clearly visible in the image. Do not guess or add details. Answer:"
+  prompt: "The photo shows"
   num_captions_per_image: 3
   max_new_tokens: 75
   min_length: 20
   do_sample: true
   temperature: 0.2
-  top_k: 50
+  top_k: 10
   top_p: 0.95
   repetition_penalty: 1.2

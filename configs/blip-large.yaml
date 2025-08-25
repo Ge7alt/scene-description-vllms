@@ -5,7 +5,7 @@ model:
   type: "blip"
   device: "cuda"
   # Use float16 for faster inference and less memory on GPU
-  torch_dtype: "float16"
+  torch_dtype: "bfloat16"
 
 # Data Paths
 paths:
@@ -21,6 +21,6 @@ generation:
   min_length: 20
   do_sample: true
   temperature: 0.2
-  top_k: 50
+  top_k: 10
   top_p: 0.95
   repetition_penalty: 1.2

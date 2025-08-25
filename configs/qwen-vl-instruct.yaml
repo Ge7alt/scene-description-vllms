@@ -1,0 +1,31 @@
+# Model Configuration
+model:
+  id: "Qwen/Qwen2.5-VL-3B-Instruct" # huggingface model ID
+  type: "qwen"
+  # For GPU: "cuda", for CPU: "cpu"
+  device: "cuda"
+  torch_dtype: "bfloat16"
+
+# Data Paths
+paths:
+  # image_folder: "data/val2017"
+  output_dir: "outputs"
+
+# Generation Parameters
+generation:
+  prompt: |
+    You are a precise and objective image analyst. Your task is to describe exactly what you see in the image.
+    First, provide a single sentence that gives an overall summary of the scene.
+    Then, provide a bullet-point list of key, observable facts.
+    - Describe the main subjects and their specific actions.
+    - Describe the setting and any notable background objects.
+    Do not make assumptions or infer any information that is not visually present.
+
+  num_captions_per_image: 3
+  max_new_tokens: 128
+  min_length: 20
+  do_sample: true
+  temperature: 0.2
+  top_k: 10
+  top_p: 0.95
+  repetition_penalty: 1.2

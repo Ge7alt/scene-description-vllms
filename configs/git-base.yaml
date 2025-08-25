@@ -1,21 +1,21 @@
 # Model Configuration
 model:
-  id: "Salesforce/blip-image-captioning-large"
+  id: "microsoft/git-base"
   # For GPU: "cuda", for CPU: "cpu"
-  type: "blip"
+  type: "ms-git"
   device: "cuda"
   # Use float16 for faster inference and less memory on GPU
-  torch_dtype: "float16"
+  torch_dtype: "float32"
 
 # Data Paths
 paths:
-  # image_folder: "data/val2017"
   output_dir: "outputs"
 
 # Generation Parameters
 generation:
   # A general prompt to guide the model. Set to null for unconditional generation.
-  prompt: "a photography of"
+  # prompt: "a detailed accurate description of the scene"
+  prompt: null
   num_captions_per_image: 3
   max_new_tokens: 75
   min_length: 20
@@ -24,3 +24,11 @@ generation:
   top_k: 50
   top_p: 0.95
   repetition_penalty: 1.2
+
+
+# Evaluation - Requires a ground truth JSON file
+evaluation:
+  # Path to a JSON file with ground truth captions.
+  # Example format: {"image1.jpg": ["a photo of a cat", "a cat is sleeping"], ...}
+  # Set to null if you don't have reference captions.
+  reference_captions_path: data/captions_val2017.json

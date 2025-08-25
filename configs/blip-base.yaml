@@ -9,8 +9,7 @@ model:
 
 # Data Paths
 paths:
-  image_folder: "data/val2017"
-  # Timestamps will be prepended to output folders
+  # image_folder: "data/val2017"
   output_dir: "outputs"
 
 # Generation Parameters
@@ -21,15 +20,7 @@ generation:
   max_new_tokens: 75
   min_length: 20
   do_sample: true
-  temperature: 0.7
+  temperature: 0.2
   top_k: 50
   top_p: 0.95
   repetition_penalty: 1.2
-
-
-# Evaluation - Requires a ground truth JSON file
-evaluation:
-  # Path to a JSON file with ground truth captions.
-  # Example format: {"image1.jpg": ["a photo of a cat", "a cat is sleeping"], ...}
-  # Set to null if you don't have reference captions.
-  reference_captions_path: data/captions_val2017.json

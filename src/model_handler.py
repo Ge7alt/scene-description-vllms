@@ -3,7 +3,7 @@ import torch
 from transformers import (
     BlipProcessor, BlipForConditionalGeneration,
     Blip2Processor, Blip2ForConditionalGeneration,
-    AutoProcessor, AutoModelForCausalLM,
+    AutoProcessor, AutoModelForVision2Seq,
     LlavaForConditionalGeneration
 )
 from PIL.Image import Image
@@ -38,7 +38,7 @@ def load_model(
     elif model_type == "blip2":
         processor = Blip2Processor.from_pretrained(model_id, use_fast=True)
         model = Blip2ForConditionalGeneration.from_pretrained(
-            model_id, torch_dtype=dtype, device_map='auto'
+            model_id, torch_dtype=dtype, load_in_8bit=True, device_map='auto'
         ).to(device)
 
     elif model_type == "llava":
@@ -48,8 +48,8 @@ def load_model(
         ).to(device)
 
     else:  # generic fallback
-        processor = AutoProcessor.from_pretrained(model_id)
-        model = AutoModelForCausalLM.from_pretrained(
+        processor = AutoProcessor.from_pretrained(model_id, use_fast=True)
+        model = AutoModelForVision2Seq.from_pretrained(
             model_id, torch_dtype=dtype, device_map='auto'
         ).to(device)
 
@@ -59,17 +59,8 @@ def prepare_inputs(processor, image, prompt, model_type, device, dtype):
     """
     Normalize inputs across BLIP, BLIP2, LLaVA, Qwen-VL families.
     """
-
-    # --- BLIP ---
-    if model_type == "blip":
-        return processor(image, text=prompt, return_tensors="pt").to(device, dtype)
-
-    # --- BLIP2 ---
-    elif model_type == "blip2":
-        return processor(images=image, text=prompt, return_tensors="pt").to(device, dtype)
-
     # --- LLaVA ---
-    elif model_type == "llava":
+    if model_type == "llava":
         conversation = [
             {
                 "role": "user",
@@ -108,7 +99,9 @@ def prepare_inputs(processor, image, prompt, model_type, device, dtype):
     #     return inputs.to(device)
 
     else:
-        raise ValueError(f"Unsupported model_type: {model_type}")
+        # Generic processor call
+        return processor(images=image, text=prompt, return_tensors="pt").to(device, dtype)
+        # raise ValueError(f"Unsupported model_type: {model_type}")
 
 
 

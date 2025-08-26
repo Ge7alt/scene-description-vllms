@@ -1,0 +1,131 @@
+{
+    "per_image_metrics": {
+        "0.png": {
+            "captions": [
+                " a man walking down the sidewalk with a fedex truck in the background and another person on the sidewalk",
+                " a man walking down the sidewalk with his dog and fedex truck in the background",
+                " a man walking down the sidewalk with a fedex van in the background and a dog on the sidewalk"
+            ],
+            "performance": {
+                "latency_ms": 556.6124000033597,
+                "peak_gpu_mem_used_mb": 992.115234375,
+                "tokens_per_second": 35.93164650999382
+            }
+        },
+        "1.png": {
+            "captions": [
+                " a man is holding a cat on the porch in front of a car and pumpkins",
+                " a man in blue shirt and jeans playing with a cat on porch next to pumpkins",
+                " a man in blue shirt and jeans holding a cat on porch with pumpkins and other decorations"
+            ],
+            "performance": {
+                "latency_ms": 218.59079999558162,
+                "peak_gpu_mem_used_mb": 991.904296875,
+                "tokens_per_second": 82.34564309368845
+            }
+        },
+        "10.png": {
+            "captions": [
+                " a woman sitting at a table in front of a window looking out on the street",
+                " a woman sitting at a table in front of a window with a cell phone in her hand",
+                " a woman sitting at a table with a cup of coffee in front of her and looking out the window"
+            ],
+            "performance": {
+                "latency_ms": 232.85529999702703,
+                "peak_gpu_mem_used_mb": 992.115234375,
+                "tokens_per_second": 85.8902502981695
+            }
+        },
+        "100.png": {
+            "captions": [
+                " a woman walking down the street in an alley with her foot on the ground and a man standing behind",
+                " a woman walking down the street in an alley with her head on her hands and feet crossed",
+                " a woman walking down the street in a pink dress and black jacket with her hands on her hips"
+            ],
+            "performance": {
+                "latency_ms": 252.50899999809917,
+                "peak_gpu_mem_used_mb": 992.115234375,
+                "tokens_per_second": 79.20509764068036
+            }
+        },
+        "101.png": {
+            "captions": [
+                " a man is standing in front of a building and looking at a suitcase on the floor",
+                " two people standing in front of a building and one person sitting on the ground with luggage",
+                " a man is walking down the street with his luggage in hand and another person on the ground"
+            ],
+            "performance": {
+                "latency_ms": 249.30909999238793,
+                "peak_gpu_mem_used_mb": 991.904296875,
+                "tokens_per_second": 72.19953062503369
+            }
+        },
+        "102.png": {
+            "captions": [
+                " a man is cleaning the street with a hose and mop in his hand while another person watches",
+                " a man is cleaning the floor in front of a gas station with a hose and bucket",
+                " a man is cleaning the floor with a mop and buckets in front of him"
+            ],
+            "performance": {
+                "latency_ms": 265.6442000006791,
+                "peak_gpu_mem_used_mb": 992.009765625,
+                "tokens_per_second": 71.52424182403163
+            }
+        },
+        "103.png": {
+            "captions": [
+                " two men are seen walking through the street holding signs and talking to each other while one man is in blue",
+                " two men walking down the street holding signs and talking to each other on cell phones",
+                " two men are walking down the street holding signs and talking to each other while one man is holding a sign"
+            ],
+            "performance": {
+                "latency_ms": 245.4301999969175,
+                "peak_gpu_mem_used_mb": 992.220703125,
+                "tokens_per_second": 85.56404224200506
+            }
+        },
+        "104.png": {
+            "captions": [
+                " a man in blue suit standing next to a bench and a fence with an umbrella",
+                " a man standing next to a bench on the side walk with a camera attached to it",
+                " a man is seen in this image from the surveillance camera at a bus stop,"
+            ],
+            "performance": {
+                "latency_ms": 243.59980000008363,
+                "peak_gpu_mem_used_mb": 991.7978515625,
+                "tokens_per_second": 69.78659259980576
+            }
+        },
+        "105.png": {
+            "captions": [
+                " a man and his dog are seen from above in this image taken by the camera",
+                " a man holding an umbrella and walking with a dog in the street behind him,",
+                " a man is walking with an umbrella and his dog in the street outside of a building"
+            ],
+            "performance": {
+                "latency_ms": 231.50599999644328,
+                "peak_gpu_mem_used_mb": 991.7978515625,
+                "tokens_per_second": 73.43222206016767
+            }
+        },
+        "106.png": {
+            "captions": [
+                " a man walking his dog down the street with a skateboard in hand and another person standing next to him",
+                " a man walking down the sidewalk with his dog in tow behind him and another person on a cell phone",
+                " a man walking with his dog down the street, and another person standing near him"
+            ],
+            "performance": {
+                "latency_ms": 257.8933000040706,
+                "peak_gpu_mem_used_mb": 992.220703125,
+                "tokens_per_second": 81.42902510328315
+            }
+        }
+    },
+    "model_name": "Salesforce/blip-image-captioning-large",
+    "summary_statistics": {
+        "average_latency_ms": 275.39500999846496,
+        "average_peak_gpu_mem_used_mb": 992.0201171875,
+        "average_tokens_per_second": 73.73082919968591,
+        "total_images_processed": 10
+    }
+}

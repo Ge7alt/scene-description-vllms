@@ -1,0 +1,131 @@
+{
+    "per_image_metrics": {
+        "0.png": {
+            "captions": [
+                " a man running down the sidewalk in front of a fedex van, with his feet on the ground",
+                " a man running down the sidewalk in front of his house, with a fedex van behind him",
+                " a man running down the sidewalk with his dog in tow, california, usa, on april 20, 2018"
+            ],
+            "performance": {
+                "latency_ms": 1010.2220999979181,
+                "peak_gpu_mem_used_mb": 553.8251953125,
+                "tokens_per_second": 20.78750801436959
+            }
+        },
+        "1.png": {
+            "captions": [
+                " a man and his dog playing with pumpkins on the porch in front of their home",
+                " two dogs and their owner playing with pumpkins in the yard, while they are dressed up for halloween",
+                " two dogs and their owner playing with pumpkins in the yard at home for halloween"
+            ],
+            "performance": {
+                "latency_ms": 228.0384000041522,
+                "peak_gpu_mem_used_mb": 553.7197265625,
+                "tokens_per_second": 87.70452695526646
+            }
+        },
+        "10.png": {
+            "captions": [
+                " two women sitting at a table eating food and talking to each other people who are looking in the same direction",
+                " two women sitting at a table eating food and talking on their phones in the street",
+                " two women sitting at a table eating food and talking to each other people in the background"
+            ],
+            "performance": {
+                "latency_ms": 232.88650000176858,
+                "peak_gpu_mem_used_mb": 553.8251953125,
+                "tokens_per_second": 90.17268068282414
+            }
+        },
+        "100.png": {
+            "captions": [
+                " a girl in the street was captured by a video camera on monday, june 21",
+                " a woman in pink dress is seen on the street in india, where she was shot",
+                " the woman who was attacked by a bus in the city of kash, pakistan"
+            ],
+            "performance": {
+                "latency_ms": 206.6290999937337,
+                "peak_gpu_mem_used_mb": 553.40234375,
+                "tokens_per_second": 82.27301963041774
+            }
+        },
+        "101.png": {
+            "captions": [
+                " the suspect ' s dog was captured by the police in this video taken from an atm",
+                " the suspect was captured by the cci video camera on tuesday, jan 21, 2019",
+                " the suspect was captured by police in the mall on friday, jan 17, 2020"
+            ],
+            "performance": {
+                "latency_ms": 221.6612000047462,
+                "peak_gpu_mem_used_mb": 553.40234375,
+                "tokens_per_second": 76.69362071321456
+            }
+        },
+        "102.png": {
+            "captions": [
+                " a man cleaning the street in front of a house shows how he was doing it",
+                " the water pump in a flooded street in the philippines, which was still closed due to the government",
+                " the man who was cleaning his pool in the middle school parking lot is seen on youtube"
+            ],
+            "performance": {
+                "latency_ms": 229.29440000734758,
+                "peak_gpu_mem_used_mb": 553.6142578125,
+                "tokens_per_second": 82.86290462999166
+            }
+        },
+        "103.png": {
+            "captions": [
+                " two men fighting in the street, one is holding a sign that says ' no more than",
+                " two men fighting in the street, one is holding a sign that reads ' i amd '",
+                " two men fighting over a sign that says, ' i amd ' in the middle of the street"
+            ],
+            "performance": {
+                "latency_ms": 266.5192999993451,
+                "peak_gpu_mem_used_mb": 553.7197265625,
+                "tokens_per_second": 75.04146979242833
+            }
+        },
+        "104.png": {
+            "captions": [
+                " the man who was caught by police in london on tuesday, may 20, 2019",
+                " the man being filmed by police in london on monday, june 6, 2018 credit",
+                " the man who was caught by police in london on monday, june 6, 2019"
+            ],
+            "performance": {
+                "latency_ms": 233.96449998836033,
+                "peak_gpu_mem_used_mb": 553.29638671875,
+                "tokens_per_second": 68.38644324585994
+            }
+        },
+        "105.png": {
+            "captions": [
+                " the suspect ' s dog, who was caught in a car at a gas station",
+                " the suspect ' s dog, who was caught by police in the area of the crime scene",
+                " the man who was shot by police at the scene of the incident in st albans"
+            ],
+            "performance": {
+                "latency_ms": 238.6069999920437,
+                "peak_gpu_mem_used_mb": 553.5087890625,
+                "tokens_per_second": 75.4378538793925
+            }
+        },
+        "106.png": {
+            "captions": [
+                " the man who was attacked by a dog in the driveway at his home in the village",
+                " the man who was caught by police in the area of the property, is seen on surveillance video",
+                " the man who was shot in the back yard of his house is seen on surveillance video"
+            ],
+            "performance": {
+                "latency_ms": 241.65459998766892,
+                "peak_gpu_mem_used_mb": 553.6142578125,
+                "tokens_per_second": 78.62461546757035
+            }
+        }
+    },
+    "model_name": "Salesforce/blip-image-captioning-base",
+    "summary_statistics": {
+        "average_latency_ms": 310.94770999770844,
+        "average_peak_gpu_mem_used_mb": 553.592822265625,
+        "average_tokens_per_second": 73.79846430113352,
+        "total_images_processed": 10
+    }
+}

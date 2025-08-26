@@ -1,0 +1,131 @@
+{
+    "per_image_metrics": {
+        "0.png": {
+            "captions": [
+                " a man walking down the sidewalk in front of an fedex van\n",
+                " a man walking down the sidewalk with his shoes on\n",
+                " a man walking down the sidewalk next to an fedex van\n"
+            ],
+            "performance": {
+                "latency_ms": 980.9428000007756,
+                "peak_gpu_mem_used_mb": 7214.1552734375,
+                "tokens_per_second": 14.271984054512588
+            }
+        },
+        "1.png": {
+            "captions": [
+                " a man on the porch with pumpkins and other decorations\n",
+                " a man dressed in black holding his dog on the porch\n",
+                " a man in the front yard with pumpkins\n"
+            ],
+            "performance": {
+                "latency_ms": 180.1536999992095,
+                "peak_gpu_mem_used_mb": 7212.2802734375,
+                "tokens_per_second": 66.60978930797788
+            }
+        },
+        "10.png": {
+            "captions": [
+                " a woman sitting at the table in front of her\n",
+                " the woman sitting at a table with her cell phone\n",
+                " the woman sitting at a table with her phone\n"
+            ],
+            "performance": {
+                "latency_ms": 151.60770001239143,
+                "peak_gpu_mem_used_mb": 7211.3427734375,
+                "tokens_per_second": 72.55568153267237
+            }
+        },
+        "100.png": {
+            "captions": [
+                " a woman walking on the street\n",
+                " a woman walking on the street\n",
+                " a woman walking on the street\n"
+            ],
+            "performance": {
+                "latency_ms": 118.00999999104533,
+                "peak_gpu_mem_used_mb": 7210.88623046875,
+                "tokens_per_second": 59.31700703780327
+            }
+        },
+        "101.png": {
+            "captions": [
+                " a man walking down the hallway\n",
+                " two men standing in front of a building\n",
+                " a man walking down the hallway with his backpack on\n"
+            ],
+            "performance": {
+                "latency_ms": 171.07450000185054,
+                "peak_gpu_mem_used_mb": 7211.3427734375,
+                "tokens_per_second": 64.29947186682416
+            }
+        },
+        "102.png": {
+            "captions": [
+                " a man cleaning the street\n",
+                " a man cleaning the sidewalk with a hose\n",
+                " a man cleaning the ground\n"
+            ],
+            "performance": {
+                "latency_ms": 133.4564999997383,
+                "peak_gpu_mem_used_mb": 7210.88623046875,
+                "tokens_per_second": 67.43770442067375
+            }
+        },
+        "103.png": {
+            "captions": [
+                " the man walking down a street\n",
+                " the man walking down a street\n",
+                " a man walking down the street\n"
+            ],
+            "performance": {
+                "latency_ms": 102.94849998899736,
+                "peak_gpu_mem_used_mb": 7210.88623046875,
+                "tokens_per_second": 67.99516263712562
+            }
+        },
+        "104.png": {
+            "captions": [
+                " a man walking down the street\n",
+                " the man walking away from a picnic table\n",
+                " a man walking away from the picnic table\n"
+            ],
+            "performance": {
+                "latency_ms": 126.99920000159182,
+                "peak_gpu_mem_used_mb": 7210.88623046875,
+                "tokens_per_second": 70.8665881351
+            }
+        },
+        "105.png": {
+            "captions": [
+                " the dog being chased by a man\n",
+                " the man walking away from a dog\n",
+                " a man walking his dog in the street\n"
+            ],
+            "performance": {
+                "latency_ms": 124.14240000362042,
+                "peak_gpu_mem_used_mb": 7210.88623046875,
+                "tokens_per_second": 72.49739009184235
+            }
+        },
+        "106.png": {
+            "captions": [
+                " the man walking his dog\n",
+                " the man walking his dog in front of a car\n",
+                " the man walking his dog in front of a car\n"
+            ],
+            "performance": {
+                "latency_ms": 161.41679999418557,
+                "peak_gpu_mem_used_mb": 7211.3427734375,
+                "tokens_per_second": 68.1465621942464
+            }
+        }
+    },
+    "model_name": "Salesforce/blip2-opt-2.7b",
+    "summary_statistics": {
+        "average_latency_ms": 225.0752099993406,
+        "average_peak_gpu_mem_used_mb": 7211.489501953125,
+        "average_tokens_per_second": 62.399734127877835,
+        "total_images_processed": 10
+    }
+}

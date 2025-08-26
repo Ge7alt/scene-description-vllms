@@ -1,0 +1,131 @@
+{
+    "per_image_metrics": {
+        "0.png": {
+            "captions": [
+                "The image shows a FedEx delivery driver walking on a sidewalk next to his van.\n\nKey Observations:\n- A person wearing sunglasses, dark shorts with white stripes at the bottom, and black shoes is seen from behind as they walk away from the camera towards a parked FedEx van.\n- The FedEx van has \"FedEx\" written prominently across its back door.\n- There's grass visible near where the person walks along the sidewalk.\n- Leaves can be observed scattered around some rocks by the side of the path.\n- Part of another vehicle (possibly a car) is partially visible through the trees beyond the FedEx van.",
+                "Summary: A FedEx delivery driver walks away from his van on a suburban street.\n\nKey Observations:\n\n* The person appears to be wearing dark clothing with some lighter stripes near the bottom half.\n  * They have short hair cut close to the head.\n    * Their right arm seems slightly bent at the elbow as they walk forward.\n      * There's no visible facial expression due to being turned sideways towards the camera.\n        * No other people can be seen clearly within this frame.\n          * In front of them, there\u2019s a white FedEx Express cargo van parked along the curb.\n            * It has its rear lights illuminated indicating it might just",
+                "The image shows a FedEx delivery driver walking away from his van on a sidewalk next to some trees.\n\nKey Observations:\n- A man wearing sunglasses, dark shorts, and black shoes walks towards the camera along a sidewalk.\n- Behind him is a white FedEx Express van parked at the curb with its rear door open.\n- The ground appears wet near where he stands, suggesting recent rain.\n- There's green grass visible behind the tree line.\n- Trees can be seen lining both sides of the street adjacent to the sidewalk.\n- No other people or vehicles are immediately noticeable apart from those described."
+            ],
+            "performance": {
+                "latency_ms": 32895.57299998705,
+                "peak_gpu_mem_used_mb": 4173.34765625,
+                "tokens_per_second": 3.891101091324671
+            }
+        },
+        "1.png": {
+            "captions": [
+                "The image depicts a person standing on a wooden deck outside during daytime. The individual appears to be engaged with something near them but does not have clear hands-on interaction visible.\n\nKey Observations:\n- A man wearing blue jeans and sneakers stands on a wooden deck.\n- He has his back turned slightly towards the camera.\n- There are several pumpkins scattered around him on the deck.\n- In front of him, there's a white object he seems to be interacting with using both hands.\n- Behind him, part of a white van can be seen parked at some distance from the house entrance.\n- To the right side of the frame, another",
+                "Overall Summary: A person stands on steps outside near Halloween decorations.\n\nKey Facts:\n- The individual appears to be wearing casual clothing including jeans and sneakers.\n- There are several pumpkins scattered around them; some appear hollowed out for decoration purposes.\n- In front of the person's feet lies another pumpkin with its top cut off, possibly indicating it has been carved into a jack-o'-lantern.\n- To the right side of these items, there seems to be a small statue resembling a skeleton holding a broomstick.\n- Behind this setup, part of a white van can be seen parked along the road adjacent to gravelly ground.\n",
+                "Overall Summary:\nThe image depicts a person standing on a porch decorated for Halloween with pumpkins and other decorations.\n\nKey Observations:\n\n\u2022 A man wearing a blue shirt, jeans, white sneakers, and a baseball cap stands on a wooden deck outside a house.\n\u2022 He appears to be holding something small between his fingers near his waist area.\n\u2022 The ground below him has several orange pumpkin carvings placed around it.\n\u2022 There's a white van parked behind some trees visible through the doorway at the top left corner of the frame.\n\u2022 To the right side of the image, there seems to be another figure dressed as a skeleton next to"
+            ],
+            "performance": {
+                "latency_ms": 19803.648400004022,
+                "peak_gpu_mem_used_mb": 4236.5615234375,
+                "tokens_per_second": 6.463455491361581
+            }
+        },
+        "10.png": {
+            "captions": [
+                "The image depicts a woman sitting at an outdoor cafe table with her hands clasped together on the table's surface.\n\nKey Observations:\n- The woman has blonde hair tied back into a ponytail.\n- She wears glasses and appears to be engaged in conversation or deep thought.\n- There is a glass drink container (likely containing water) placed near her hand.\n- A bottle cap can also be seen next to it.\n- In front of her, there seems to be some kind of menu or paper item.\n- To her right side, part of another person wearing a yellow jacket is visible through the window.\n- Outside the window, we",
+                "The image shows a woman sitting at an outdoor cafe table with her hands clasped together on the table's surface.\n\nKey Observations:\n- A woman wearing glasses sits at a wooden table outside a caf\u00e9.\n- She has blonde hair tied back into a ponytail.\n- The woman appears to be engaged in conversation or deep thought as she looks slightly downward while holding something small between her fingers.\n- There is another person visible through glass doors behind her, but they appear blurry due to distance.\n- On the table, there seems to be some items including possibly a drink container (glass) and other indistinct objects partially obscured by shadows cast",
+                "The image shows a woman sitting at an outdoor cafe table with her hands clasped together on the table's surface.\n\nKey Observations:\n- A woman wearing glasses sits at a wooden round table outside a caf\u00e9.\n- She has blonde hair tied back into a ponytail.\n- In front of her is a glass drink container (possibly a wineglass).\n- There appears to be some kind of small object near the bottom center of the frame she might have placed there accidentally while talking.\n- The table also features a place mat underneath it.\n- Behind her through large windows, one can observe another person seated inside the establishment facing away from us towards"
+            ],
+            "performance": {
+                "latency_ms": 19549.29369999445,
+                "peak_gpu_mem_used_mb": 4108.150390625,
+                "tokens_per_second": 6.547551127130303
+            }
+        },
+        "100.png": {
+            "captions": [
+                "The image shows a person walking on a patterned surface with white lines forming shapes.\n\nKey Observations:\n- The individual appears to be wearing traditional attire.\n- They have one hand raised near their face while walking.\n- The ground has a grid-like design made up of alternating light-colored squares separated by dark borders.\n- In the distance behind them, there seems to be some kind of machinery partially visible at the top edge of the frame.",
+                "The image depicts a person standing on a large mat with white patterns arranged in rows across its surface.\n\nKey Observations:\n- The individual appears to be wearing traditional attire, possibly including a sari.\n- They have one hand raised near their face while holding something small between their fingers.\n- Their other arm hangs by their side as they stand upright.\n- The ground beneath them consists entirely of this patterned mat material.\n- In the distant upper right corner, there's another object partially visible which seems like part of some machinery or equipment.\nThis description focuses solely on elements directly observed within the provided frame without making additional interpretations beyond those evident from",
+                "The image shows a person walking on a patterned surface with white lines forming a grid-like design.\n\nKey Observations:\n- The individual appears to be wearing traditional attire.\n- They have one hand raised near their face while walking.\n- The ground beneath them has a distinct geometric pattern consisting of intersecting white lines creating squares and rectangles.\n- In the distant background, there seems to be some kind of machinery partially visible at the top edge of the frame."
+            ],
+            "performance": {
+                "latency_ms": 18692.510499997297,
+                "peak_gpu_mem_used_mb": 4188.37841796875,
+                "tokens_per_second": 6.8476623297881
+            }
+        },
+        "101.png": {
+            "captions": [
+                "Summary: A man stands facing away from another person who appears injured on the ground.\n\nKey Observations:\n- Two individuals are visible; one standing and one lying down.\n- The individual standing wears dark clothing with red markings around his neck area.\n- The individual lying down has white bandages wrapped around them near their waist.\n- They appear to be inside a building with tiled flooring and glass doors behind them.\n- There's no clear indication of cause for distress based solely on visual content provided.",
+                "Summary: A person stands facing away from another individual who appears injured on the ground.\n\nKey Observations:\n- Two individuals are visible; one standing and one lying down.\n  - The standing person wears dark clothing with red accents.\n  - The seated person has a white object near them.\n- Background includes tiled flooring and glass doors leading outside.\n- There's a yellow wall adjacent to the door area.",
+                "Summary: A person stands facing away from another individual who appears injured on the ground.\n\nKey Observations:\n- Two individuals are visible; one standing and one lying down.\n- The standing person wears dark clothing with red accents.\n- The seated person lies face-down against the tiled floor.\n- There's a yellow wall behind them both.\n- Glass doors can be seen at the top center part of the frame.\n- No other significant details about the environment beyond these elements are discernible."
+            ],
+            "performance": {
+                "latency_ms": 15033.524200000102,
+                "peak_gpu_mem_used_mb": 4370.07275390625,
+                "tokens_per_second": 6.6518002478753
+            }
+        },
+        "102.png": {
+            "captions": [
+                "Summary: A worker is using a pressure washer on a wet surface.\n\nKey Observations:\n\n- The person appears to be wearing safety gear including gloves and possibly protective clothing.\n- They are holding onto two handles connected by a hose, which they use for cleaning purposes.\n- There's water splashing around as it sprays from the nozzle attached at one end of the hose.\n- In front of them lies a large puddle with some scattered debris visible near its edge.\n- Behind this area stands another smaller pool-like structure filled partially with liquid but mostly dry ground above it.\n- To the right side there seems to be part of a fence",
+                "The image shows a person using a pressure washer on a wet surface outdoors.\n\nKey Observations:\n- A person wearing red clothing stands holding a long-handled tool with water spraying from it onto a flat, wet ground area.\n- The individual appears focused on cleaning or treating the surface.\n- In the background, there's greenery including trees visible behind barriers.\n- There are yellow caution cones placed near the edge where the person works.\n- Further back, some buildings can be seen through gaps between the foliage and barriers.\n- Streetlights are also noticeable among the vegetation.",
+                "Summary: A person is using a pressure washer on a wet surface.\n\nKey Observations:\n- Person wearing red shirt and black pants standing near a yellow traffic cone.\n- The individual appears to be operating a high-pressure water hose directed at the ground.\n- There's visible spray from the nozzle onto the pavement below them.\n- Background includes greenery with trees and some buildings partially obscured by foliage.\n- Yellow barriers line part of the road behind where the action takes place.\n- Streetlights can also be seen along this side of the street."
+            ],
+            "performance": {
+                "latency_ms": 19315.926499999478,
+                "peak_gpu_mem_used_mb": 4174.189453125,
+                "tokens_per_second": 6.626655987741694
+            }
+        },
+        "103.png": {
+            "captions": [
+                "Summary: A person wearing a blue jacket stands near a sign with \"ONLY 2Z PINT\" written on it.\n\nKey Facts:\n- The individual appears to be standing outside at night.\n- They are dressed in dark pants and a light-colored top (likely a hoodie).\n- There's another person partially visible behind them.\n- In front of this second person, there seems to be some kind of barrier or partition.\n- To the left side of the frame, part of a building facade can be seen, displaying large letters vertically oriented from bottom to top.\n- On the ground next to where these individuals stand, there\u2019s a pudd",
+                "Summary: A person wearing blue clothing stands near a sign displaying \"2Z PINT\" outside a building at night.\n\nKey Observations:\n- Person standing outdoors with back partially facing camera\n- Wearing blue jacket and dark pants\n- Holding something small in hand (possibly phone)\n- Standing next to a large rectangular signboard \n- Sign reads \"ONLY 2Z PINT\"\n- Background includes part of another structure on left side\n- Ground appears wet or reflective under lights\n- Nighttime lighting conditions visible from shadows and reflections",
+                "Summary: A person wearing a blue jacket stands near a sign displaying \"ONLY 2Z PINT\" at night.\n\nKey Facts:\n- The photo appears to be taken outdoors during nighttime.\n- There is a person standing on the right side of the frame, partially visible from behind.\n- In front of this individual, there's another person dressed in a blue jacket holding something small between two fingers.\n- To the left foreground, part of a large white sign with black text can be seen but it\u2019s mostly obscured by shadows.\n- Behind these individuals, there seems to be some kind of structure or barrier made up of horizontal bars forming vertical"
+            ],
+            "performance": {
+                "latency_ms": 19030.366500010132,
+                "peak_gpu_mem_used_mb": 4188.9775390625,
+                "tokens_per_second": 6.7260922168751645
+            }
+        },
+        "104.png": {
+            "captions": [
+                "Summary: The image shows two individuals standing near a wooden picnic table on a sidewalk next to a fence.\n\nKey Observations:\n- Two people wearing dark clothing stand close together by the side of a street.\n- A wooden picnic table with attached benches sits prominently between them.\n- Behind the table, there's a metal gate leading into another area beyond it.\n- The ground appears wet, suggesting recent rain or cleaning activity.\n- There is no visible text within this description except for part of a timestamp at the top right corner indicating \"07/02/2019 18:06\".",
+                "Summary: A person stands near a wooden picnic table on a sidewalk with a metal gate behind them.\n\nKey Observations:\n\n\u2022 Person standing next to a wooden picnic table\n\n\u2022 Table has two benches attached at each end\n\n\u2022 Metal fence/gate visible behind the person\n\n\u2022 Sidewalk surface appears wet (possibly from rain)\n\n\u2022 Date stamp shows 07/02/19 at 18:06 hours\n\n\u2022 Time zone indicator \"GMT\" suggests this was taken during daylight saving time",
+                "Summary: The image shows two individuals near a wooden picnic table on a sidewalk with a gate behind them.\n\nKey Observations:\n- Two people standing close together by a wooden picnic table.\n  - One person appears to be wearing blue clothing and jeans.\n    - They seem to be engaged in conversation or interaction.\n      - Another individual stands slightly apart from this group but still within view.\n        - This second person also wears dark-colored attire.\n          - Their posture suggests they might be observing something off-camera.\n            - Both figures appear focused on activities around the picnic area.\n              - There's no visible movement indicating motion blur.\n                - No"
+            ],
+            "performance": {
+                "latency_ms": 19381.130900001153,
+                "peak_gpu_mem_used_mb": 4205.05517578125,
+                "tokens_per_second": 6.604361771272717
+            }
+        },
+        "105.png": {
+            "captions": [
+                "Summary: A person is walking with a dog on a brick-paved driveway near a gate.\n\nKey Observables:\n- Person wearing dark clothing holding something blue\n- Dog running towards the gate from behind them\n- Brick pavement covering most of the ground\n- Gate at the end of the driveway\n- Fence surrounding part of the property\n- Car parked outside the fence area\n- Trash can visible next to the wall on the left side",
+                "Summary: A person is walking with a dog on a brick-paved driveway near a gate.\n\nKey Observations:\n\n\u2022 Person wearing dark clothing and holding something blue\n\n\u2022 Dog appears to be following closely behind the person\n\n\u2022 Gate at end of driveway leading into another area\n\n\u2022 Brick pavement covering most of the ground visible\n\n\u2022 Background includes parked cars and some fencing \n\n\u2022 Overall outdoor residential setting suggested by surroundings",
+                "Summary: A person is walking with a dog on a brick-paved driveway near a gate.\n\nKey Observables:\n- Person wearing dark clothing holding something blue\n- Dog running towards the person from behind a metal fence\n- Gate at end of driveway leading into another area\n- Brick wall surrounding part of the driveway\n- Car parked along side street visible through the fence\n- Trash can located next to the brick wall \n- Additional car partially visible beyond the fence\n\nThe description provides details about who's doing\u4ec0\u4e48\uff0cwhat they're carrying, where it all takes place as well as some additional context clues like vehicles seen but out-of-focus"
+            ],
+            "performance": {
+                "latency_ms": 19592.15170000971,
+                "peak_gpu_mem_used_mb": 4158.44091796875,
+                "tokens_per_second": 6.533228302838047
+            }
+        },
+        "106.png": {
+            "captions": [
+                "Summary: A person walks down a brick-paved path with a dog following closely behind.\n\nKey Observations:\n- Person wearing dark clothing (hoodie, pants) walking away from camera on left side.\n- Dog running alongside the person towards right side of frame.\n- Brick pathway runs horizontally across bottom half of picture.\n- Metal fence visible at top center-left portion above sidewalk.\n- Car parked along street adjacent to fenced area seen partially through fence's gap.\n- Another individual appears briefly near car but out-of-focus due to distance.",
+                "Summary: A person walks down a brick-paved path with a dog following closely behind.\n\nKey Observations:\n- Person wearing dark clothing including a hoodie and pants\n- Dog appears to be a medium-sized breed with light fur\n- Pathway made up of interlocking bricks\n- Metal fence along one side of the pathway\n- Car parked on the right-hand side near the fence\n- Another individual walking away from the camera at some distance ahead",
+                "The image shows two individuals walking on a brick-paved path near a residential area with cars parked along the street.\n\nKey Observations:\n- Two people are visible; one appears to be wearing dark clothing while holding something over his shoulder.\n- The other person seems to have just exited from behind them.\n- A dog is seen running ahead slightly off-frame towards the left side.\n- There's a metal fence separating the pathway from another road where vehicles can be partially seen.\n- Cars are parked alongside this fenced-off section indicating it might be part of a driveway leading into a house.\n- The environment suggests daytime due to natural light illuminating the"
+            ],
+            "performance": {
+                "latency_ms": 18800.12660000648,
+                "peak_gpu_mem_used_mb": 4104.1181640625,
+                "tokens_per_second": 6.80846478980391
+            }
+        }
+    },
+    "model_name": "Qwen/Qwen2.5-VL-3B-Instruct",
+    "summary_statistics": {
+        "average_latency_ms": 20209.425200000987,
+        "average_peak_gpu_mem_used_mb": 4190.72919921875,
+        "average_tokens_per_second": 6.370037335601149,
+        "total_images_processed": 10
+    }
+}

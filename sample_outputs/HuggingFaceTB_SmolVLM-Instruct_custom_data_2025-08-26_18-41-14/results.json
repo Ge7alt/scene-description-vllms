@@ -1,0 +1,131 @@
+{
+    "per_image_metrics": {
+        "0.png": {
+            "captions": [
+                "A man walking on a sidewalk next to an FEDEX truck that has its back doors open. The man appears to have his backpack over one shoulder as he walks towards the camera with purpose. He wears dark shorts and shoes appropriate for outdoor activity. His head is turned slightly left so we can't see much of him but it looks like he's wearing sunglasses under his cap. There is another vehicle behind the FedEx van which I cannot identify due to angle.",
+                "A man walking on a sidewalk next to a FedEx delivery van with an orange \"FedEx\" logo that says \"EXPRESSES\". The man has dark hair and wears sunglasses, he also appears to have a backpack over his shoulder. There's another vehicle behind him which is black. In front of this same white FedEx truck there are some dead tree roots sticking out from under it.",
+                "A man walking on a sidewalk next to a FedEx delivery van that has an Express sticker on it. The man appears to have his backpack over one shoulder as he walks towards the camera with purpose. He also wears dark shorts and a light colored shirt while carrying something white in his left hand (possibly another bag). There's some foliage near the roots of a tree behind him."
+            ],
+            "performance": {
+                "latency_ms": 3216.634799988242,
+                "peak_gpu_mem_used_mb": 5679.20361328125,
+                "tokens_per_second": 29.223087432972996
+            }
+        },
+        "1.png": {
+            "captions": [
+                "The man on the porch has his hand outstretched towards someone behind him. He appears to have been interrupted while reaching for something that was inside of an open door. There is also another person standing near the front door who seems to be watching from afar as well. A small cat with white fur stands next to them. Behind all this there is a vehicle parked which looks like it could belong to one of the homeowners.",
+                "The man on the porch appears to have been attacked by someone while he was holding his dog. He has fallen backward onto the ground with his hands outstretched towards the person who seems to be trying to grab him from behind. His face looks like it's contorted into an expression of pain as if he had just received a blow to the head. \n\nThe attacker then takes off running away quickly after having grabbed hold of the man. There are two small pumpkins placed near where they fell down; one pumpkin is positioned right next to them both. A white van can also be seen parked nearby which suggests that this incident took place during daylight hours when there were no other visitors around.\n\nIn addition to these details provided above about what happened",
+                "The man appears to have been attacked by two cats while on his porch. He has fallen backward onto some pumpkins that were placed there for decoration. One of the cats was standing near him with its paw out as if it wanted something from him. The other cat appeared to be running away but then turned back towards the man. The man's face looks like he had just taken an attack blow because his head is tilted down slightly. His left arm seems to be bent upwards toward his chest area where the cat may have hit him. His right hand is holding up another pumpkin which could possibly contain more food items for the cats. There is also a white van parked behind them."
+            ],
+            "performance": {
+                "latency_ms": 3268.450400006259,
+                "peak_gpu_mem_used_mb": 5679.20361328125,
+                "tokens_per_second": 45.893307727635325
+            }
+        },
+        "10.png": {
+            "captions": [
+                "Woman sitting down with glasses on looking out window.",
+                "Woman sitting down with glasses on looking into window.",
+                "Woman sitting down with glasses on inside restaurant looking out through window."
+            ],
+            "performance": {
+                "latency_ms": 879.2219000024488,
+                "peak_gpu_mem_used_mb": 5679.20361328125,
+                "tokens_per_second": 15.92317024855842
+            }
+        },
+        "100.png": {
+            "captions": [
+                "A person wearing a pink dress walks across an empty street with white lines painted on it. The person has their hand raised near their face as they walk towards the right of the screen. There appears to be another vehicle parked behind them that looks like a small truck or wagon.",
+                "A person wearing a pink dress walks down an empty street with no cars on it. The person has their hand up near their face as if they were talking into something that was held close by them. There appears to be another person behind this one who seems to have fallen over onto some of the road's surface.",
+                "A woman wearing a pink dress walks across an empty street with her hand on her stomach. She has short dark hair. There's another person walking behind her towards the back of the picture. The road appears wet from rain."
+            ],
+            "performance": {
+                "latency_ms": 1783.209800007171,
+                "peak_gpu_mem_used_mb": 5679.20361328125,
+                "tokens_per_second": 35.890336627660204
+            }
+        },
+        "101.png": {
+            "captions": [
+                "Person standing near door with backpack on ground behind him.",
+                "Person walking near door.",
+                "Person standing on tile floor near door with glass windows."
+            ],
+            "performance": {
+                "latency_ms": 866.654000012204,
+                "peak_gpu_mem_used_mb": 5679.20361328125,
+                "tokens_per_second": 13.846356215780483
+            }
+        },
+        "102.png": {
+            "captions": [
+                "A man wearing an orange shirt and dark pants walks through a wet street with his back turned towards the camera while holding a long pole that has something attached near one end. The area appears to have been recently paved as there is no longer dirt on it but rather shiny black paint. In front of him lies a large gray cone which he seems to be using for some kind of cleaning process. Behind him stands another person who's barely seen due to their position behind him and also obscured by the angle of view. To the left side of this same individual we can observe two metal poles connected together forming a barrier between them and the road they're walking along. There is a red box located further down the path where more buildings appear from out of focus.",
+                "A man wearing an orange shirt and black pants walks through a wet concrete area with his long pole while holding it close to him near his waist. He has short hair that appears dark brown. The sidewalk he's walking on looks like it was recently paved as there is no grass growing around it yet. There is also a yellow traffic cone placed behind him towards the right of the picture. In the background, there is a red building with white trim along its side where someone can barely be seen standing by the door. Behind this structure is another larger grayish-white building which seems to have some sort of equipment attached to one corner of it. This part of the scene is slightly out of focus compared to the foreground but still clear enough for identification purposes",
+                "A man wearing an orange shirt and black pants walks across a wet concrete floor using a long pole with a bucket attached on one end. The other end of the pole has something that looks like it could be used for cleaning purposes. He appears focused as he moves forward. In front of him there's a traffic cone placed upright near his feet. Behind him, there\u2019s another person barely seen walking through some bushes towards a red building which seems to have its doors closed. There are also trees around this area. On top right corner of the picture we can observe part of a white fence. At the bottom left corner, there is a wooden railing partially covered by water."
+            ],
+            "performance": {
+                "latency_ms": 3127.5344000023324,
+                "peak_gpu_mem_used_mb": 5679.20361328125,
+                "tokens_per_second": 47.96110316161131
+            }
+        },
+        "103.png": {
+            "captions": [
+                "A man walking by an item that says \"Only \u00a32 Pint\" on it.",
+                "A man walking by an item that says \"Only \u00a32 Pint\".",
+                "A man wearing blue walking past an Only sign that says \"\u00a32 PINT\"."
+            ],
+            "performance": {
+                "latency_ms": 998.7688000110211,
+                "peak_gpu_mem_used_mb": 5679.20361328125,
+                "tokens_per_second": 19.023421636509212
+            }
+        },
+        "104.png": {
+            "captions": [
+                "A man walking on a sidewalk near an empty picnic table. The man appears to be wearing dark clothing with reflective striping around his waist area. He has short hair that looks grayish white. There's no other person present in this picture.",
+                "A man walking on a sidewalk next to an empty picnic table. The man appears to have short hair that is balding slightly above his head. He has dark skin with some light spots showing through from time to time. His clothing consists of black pants, a blue long sleeved shirt, and white gloves. There is no other person present near him. The background includes a metal fence behind him, which he seems to pass by as if it were part of another walkway. To the left there is also a trash can but this one does not appear to belong to anyone nearby. At the top right corner of the picture we can observe a street lamp pole.",
+                "A person walking on a sidewalk near an empty picnic table."
+            ],
+            "performance": {
+                "latency_ms": 2824.68359998893,
+                "peak_gpu_mem_used_mb": 5679.20361328125,
+                "tokens_per_second": 47.438941480215746
+            }
+        },
+        "105.png": {
+            "captions": [
+                "A man wearing black pants with white stripes on his ankles, dark grey shoes, and a black sweatshirt rushes towards the camera while holding up a blue jacket that appears to have fallen from above him onto his arm. He has short brown hair and looks like he's running away from something as if it was chasing after him. The dog runs behind him toward an open gate which leads into a brick house. There is another person standing near the fence by the driveway who seems to be watching them both run. In front of this area there is a light colored car parked next to some trash bins. On the street side of the picture there is a silver van driving down the road past the sidewalk where the man and dog were just walking through",
+                "A man wearing black pants with white sneakers runs after his golden retriever dog that ran out of the driveway onto the street. The man has a blue jacket flung over one arm as he appears to have tripped on something off camera. There is also another person standing near the gate watching them both from inside their house. In front of him there's a silver car parked behind some bushes next to an open garage door. Behind it all is a brick wall with two large garbage bins attached to its side.",
+                "A man wearing black pants with dark grey shoes running away from his golden retriever that has escaped through an open gate on a brick driveway while holding up his blue jacket. The dog runs towards him as he looks back over his shoulder. In the background there's another person standing near the entrance of their house next door who appears to have just seen this happen. There is also a silver car parked behind them by the curb."
+            ],
+            "performance": {
+                "latency_ms": 3083.398299990222,
+                "peak_gpu_mem_used_mb": 5679.20361328125,
+                "tokens_per_second": 48.64762363022503
+            }
+        },
+        "106.png": {
+            "captions": [
+                "A man wearing black pants with white shoes running away from his dog that has run out of the house towards the street. The car parked on the side of the road by the fence next to him is silver. There is another person walking down the sidewalk behind them who appears to have their hands up as if they were trying to stop something.",
+                "A man wearing black pants with white shoes running away from his dog who has run out of the house towards an open car door on the driveway. The person seems to have lost control over their pet.",
+                "A man walking his dog past a car."
+            ],
+            "performance": {
+                "latency_ms": 1786.4430000045104,
+                "peak_gpu_mem_used_mb": 5679.20361328125,
+                "tokens_per_second": 38.624238220769314
+            }
+        }
+    },
+    "model_name": "HuggingFaceTB/SmolVLM-Instruct",
+    "summary_statistics": {
+        "average_latency_ms": 2183.499900001334,
+        "average_peak_gpu_mem_used_mb": 5679.20361328125,
+        "average_tokens_per_second": 34.2471586381938,
+        "total_images_processed": 10
+    }
+}

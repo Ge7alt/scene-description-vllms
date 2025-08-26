@@ -1,0 +1,131 @@
+{
+    "per_image_metrics": {
+        "0.png": {
+            "captions": [
+                "The scene features two men walking down a sidewalk near parked vehicles. One man appears closer to the left edge of the image while another person can be seen further back on the right side. There's also an additional individual standing close to one of the cars. Two trucks are present in the background; one occupies most of the space from top-left",
+                "The scene features two men walking on a sidewalk near parked vehicles. One man appears closer to the left edge of the image while another person can be seen further back towards the right side. There's also an individual located more centrally within the picture. Two cars are present; one car is situated behind both individuals, extending from the center-left area almost",
+                "In this scene, there's a man walking down a sidewalk next to a FedEx van parked on the street. The person appears to be wearing sunglasses while carrying something with them. Another car can also be seen further away from the main focus of the picture."
+            ],
+            "performance": {
+                "latency_ms": 7171.108299997286,
+                "peak_gpu_mem_used_mb": 14703.0888671875,
+                "tokens_per_second": 10.45863440662699
+            }
+        },
+        "1.png": {
+            "captions": [
+                "In this scene, there's an adult man standing on a deck with two dogs nearby. One dog appears closer to him while another one stands further away from them both. The man seems engaged in playing frisbee as he holds it up high for his pets to catch. There are also several small pumpkins scattered around the area, adding some colorful",
+                "In this scene, there's an adult male wearing blue jeans standing on a porch with several pumpkins around him. He appears to be playing frisbee indoors while holding it close to his body. There are two other individuals present - one person can be seen near the left edge of the photo, possibly observing the man play,",
+                "In this scene, there's an adult man wearing blue jeans standing on a deck with several pumpkins around him. He appears to be playing with one of them while holding another pumpkin close by. There are also two dogs present; one dog can be seen near the right side of the image, and the other dog is located towards the left edge"
+            ],
+            "performance": {
+                "latency_ms": 2113.6576999997487,
+                "peak_gpu_mem_used_mb": 14703.8076171875,
+                "tokens_per_second": 35.483512775038704
+            }
+        },
+        "10.png": {
+            "captions": [
+                "In this scene, there's an older woman sitting alone at a dining table with multiple bottles on it. She appears to be looking down while seated near some potted plants that can be seen through the window of her restaurant booth. The room features chairs placed around the dining tables, as well as other items like cups and vases scattered",
+                "In this scene, there's an older woman sitting alone at a dining table with several bottles on it. She appears to be looking down while seated near a window that allows natural light into the room. The table has various items such as cups, wine glasses, forks, knives, spoons, bowls, and vases placed around",
+                "In this scene, there's an older woman sitting alone at a dining table with multiple bottles on it. She appears focused as she looks downward while holding her hand up. The room features two chairs - one nearer to the foreground where the woman sits, and another further back towards the right side of the image. There are also three p"
+            ],
+            "performance": {
+                "latency_ms": 1984.6305999963079,
+                "peak_gpu_mem_used_mb": 14703.8076171875,
+                "tokens_per_second": 37.790407948027976
+            }
+        },
+        "100.png": {
+            "captions": [
+                "In this scene, there's an adult woman walking on a sidewalk with her hand raised above her head. She appears to be wearing pink clothing as she walks down the street. The area has some tiled flooring which adds character to the environment. There isn't much else going on in the picture besides the main subject of the woman st",
+                "The scene features an older woman walking down some stairs while carrying two handbags on her arms. She appears focused as she navigates through this area. There's also another person standing nearby but they don't seem to have much interaction with each other. In addition to these individuals, there are three cars parked further back from where the women stand.",
+                "In this scene, there's an older woman walking on a sidewalk with her handbag. She appears to be wearing pink clothing as she strolls down the street. The area has several benches placed along the walkway for pedestrians to sit and relax. There is also another person standing near one of these benches, possibly obser"
+            ],
+            "performance": {
+                "latency_ms": 1998.6403999937465,
+                "peak_gpu_mem_used_mb": 14703.8076171875,
+                "tokens_per_second": 37.52550984170772
+            }
+        },
+        "101.png": {
+            "captions": [
+                "In this scene, there's an adult standing near two children who appear to be playing on their knees. The man stands close to them while they seem engaged with each other. There are three dogs present; one dog can be seen closer to the left side of the picture, another dog is located towards the right side, and the third dog is situated more centr",
+                "In this scene, there's an adult standing near two children who appear to be playing on the floor of a building with tiled floors. The man appears to be watching over them while they play. There are also several chairs scattered around the area, possibly indicating that it could be a waiting room or common space for visitors.",
+                "In this scene, there's an adult standing next to two children who appear to be playing with each other on the floor of a building lobby. The man stands near one child while another child sits nearby. There are three dogs present as well; one dog can be seen close to the sitting child, and the remaining two dogs are located further away from them"
+            ],
+            "performance": {
+                "latency_ms": 1982.871400003205,
+                "peak_gpu_mem_used_mb": 14703.8076171875,
+                "tokens_per_second": 37.82393553100759
+            }
+        },
+        "102.png": {
+            "captions": [
+                "The scene features an outdoor area with two men working on cleaning up water from the street. One man stands closer to the left side of the picture while another person can be seen further back towards the right edge. They both have mops as they work together to remove the excessive moisture present in this location.",
+                "The scene features an outdoor area with two men working on cleaning up water from the ground. One man stands closer to the left side of the picture while another person can be seen further back towards the right side. There's also a truck parked nearby, possibly used for transportation during this process. Additionally, there are several cars scattered throughout the background,",
+                "The scene features an outdoor area with several men working on cleaning tasks. One man can be seen using a hose while another person stands nearby holding a broom. There's also someone standing further away from them. In addition to these individuals, there are two cars parked within view of the workers."
+            ],
+            "performance": {
+                "latency_ms": 2074.5236999937333,
+                "peak_gpu_mem_used_mb": 14703.8076171875,
+                "tokens_per_second": 36.15287692313496
+            }
+        },
+        "103.png": {
+            "captions": [
+                "In this scene, two men can be seen walking on a sidewalk near an outdoor bar area with tables and chairs. One of them appears to have a blue jacket while carrying something under his arm. There's also another person standing nearby who seems to be observing their surroundings. The environment includes several dining tables scattered throughout the space as well",
+                "In this scene, there are two men walking on an outdoor sidewalk near some tables with chairs around them. One of these men appears to have just finished playing darts indoors, as he carries his dartboard while exiting through the doorway onto the street. The other man seems unrelated to the dart game but accompanies him during",
+                "In this scene, there are two men walking on an asphalt surface near some tables with chairs around them. One man appears to have his back turned towards another person who seems to be holding something up for him. The area also has several dining tables scattered throughout the space. There's a handbag placed close to one of these tables, possibly belonging to"
+            ],
+            "performance": {
+                "latency_ms": 2167.317700004787,
+                "peak_gpu_mem_used_mb": 14703.8076171875,
+                "tokens_per_second": 34.604986615406844
+            }
+        },
+        "104.png": {
+            "captions": [
+                "In this scene, there's an outdoor area with two wooden benches placed close together on concrete ground. One of these benches has its back facing away from the viewer. There is also a man standing near one of the benches, possibly observing his surroundings or waiting for someone. The overall atmosphere appears calm and peaceful as night falls over",
+                "The scene features an outdoor area with two wooden benches placed next to each other on concrete ground. One of these benches has its back facing away from the viewer, while another one faces forward towards them. There's also a man standing nearby who appears to be looking downwards. Additionally, there is a handbag located close to the person, possibly belonging",
+                "In this scene, there's an outdoor area with two wooden benches placed next to each other on concrete ground. One person can be seen standing near these benches, possibly observing them or waiting for someone else. The overall atmosphere appears calm and peaceful as night falls over the city street."
+            ],
+            "performance": {
+                "latency_ms": 2275.624699992477,
+                "peak_gpu_mem_used_mb": 14703.8076171875,
+                "tokens_per_second": 32.95798292233686
+            }
+        },
+        "105.png": {
+            "captions": [
+                "In this scene, there's an outdoor area with a brick floor that has a dog walking on it. The dog appears to have its head down as if sniffing something. There are two other dogs present; one of them seems to be standing near another person who may also be involved in taking care of these pets. Additionally, several cars can be seen",
+                "The scene features an outdoor area with a man standing on a brick patio holding a jacket. There's also another person nearby. In addition to these individuals, there is a dog present within this space. Two cars can be seen parked near the location as well.",
+                "The scene features an outdoor area with a man standing on brick ground while holding his jacket open. There's also another person nearby who appears to be walking away from him. In addition to these individuals, there are two dogs present - one located closer to the left side of the image and the other nearer to the center-right section. Furthermore, several cars"
+            ],
+            "performance": {
+                "latency_ms": 2428.153300003032,
+                "peak_gpu_mem_used_mb": 14703.8076171875,
+                "tokens_per_second": 30.887670889604188
+            }
+        },
+        "106.png": {
+            "captions": [
+                "The scene features two men walking on a sidewalk with their dog. One man appears closer to the camera while another walks further back. They seem engaged in conversation as they walk together. There's also a car parked nearby along the street.",
+                "In this scene, there's a man walking his dog on a brick walkway near some parked cars. The man appears to be wearing black clothing while holding onto something that could possibly be a jacket. There are two other individuals present in the background but they seem unrelated to the main subject of the photo. Additionally, another car can be seen further",
+                "The scene features two men walking on a sidewalk with their dog. One man appears closer to the foreground while another stands further back. They seem to be enjoying some time together outdoors. There's also a car parked nearby along with an umbrella placed close to it."
+            ],
+            "performance": {
+                "latency_ms": 2387.8155999991577,
+                "peak_gpu_mem_used_mb": 14703.8076171875,
+                "tokens_per_second": 31.409460596549607
+            }
+        }
+    },
+    "model_name": "llava-hf/llava-1.5-7b-hf",
+    "summary_statistics": {
+        "average_latency_ms": 2658.434339998348,
+        "average_peak_gpu_mem_used_mb": 14703.7357421875,
+        "average_tokens_per_second": 32.509497844944136,
+        "total_images_processed": 10
+    }
+}

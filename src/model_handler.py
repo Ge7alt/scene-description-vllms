@@ -1,7 +1,7 @@
 from typing import List, Tuple
 import torch
 from transformers import (
-    BitsAndBytesConfig,
+    BitsAndBytesConfig, PreTrainedModel, 
     BlipProcessor, BlipForConditionalGeneration,
     Blip2Processor, Blip2ForConditionalGeneration,
     AutoProcessor, AutoModelForVision2Seq,
@@ -15,7 +15,7 @@ logger = setup_logger()
 
 def load_model(
     model_id: str, model_type: str, device: str, dtype_str: str
-) -> Tuple[AutoProcessor, torch.nn.Module]:
+) -> Tuple[AutoProcessor, PreTrainedModel]:
     """
     Load a processor and model dynamically based on model_type.
 

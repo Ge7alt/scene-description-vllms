@@ -65,17 +65,7 @@ def main():
         config.model.torch_dtype
     )
     # ========= Load Data =========
-    # if args.dataset == "coco":
-    #     if not args.coco_path:
-    #         raise ValueError("For COCO dataset, --coco_path must be provided.")
-    #     logger.info(f"Loading COCO images from {args.coco_path}")
-    #     image_items = get_image_paths(args.coco_path)
 
-    # elif args.dataset == "nocaps":
-    #     logger.info(f"Loading NoCaps dataset ({args.nocaps_split} split) from HuggingFace")
-    #     nocaps_ds = load_dataset("HuggingFaceM4/NoCaps", split=args.nocaps_split)
-    #     # Store images and filenames in a list
-    #     image_items = [(item["image"], item["image_file_name"]) for item in nocaps_ds]
     image_items = []
     run_mode = ""
     if args.image_folder:
@@ -104,17 +94,13 @@ def main():
         images_to_process = random.sample(image_items, num_to_sample) if len(image_items) > num_to_sample else image_items
         logger.info(f"Randomly selected {len(images_to_process)} images for evaluation.")
 
-    # logger.info(f"Loading images from: {config.paths.image_folder}")
-    # image_items = get_image_paths(config.paths.image_folder)
-    # images_to_process = random.sample(image_items, 100) if len(image_items) > 100 else image_items
-    # images_to_process = random.sample(image_items, 5) if len(image_items) > 1 else image_items
 
     # ========= Main Generation Loop =========
     results = {"per_image_metrics": {}}
     results["model_name"] = config.model.id
     with PerformanceTracker(device=config.model.device) as tracker:
         for i, img_item in enumerate(images_to_process):
-            # logger.info(f"Processing image {i+1}/{len(image_items)}: {image_path.name}")
+            logger.info(f"Processing image {i+1}/{len(image_items)}: {image_path.name}")
             # image = load_image(image_path)
             # Load image and assign an ID or name for both datasets
             if run_mode in  ["coco", "folder"]:

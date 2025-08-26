@@ -297,22 +297,22 @@ def main():
 
 
 
-    # # Calculate reference-based metrics
-    # if references:
-    #     ref_metrics = calculate_coco_metrics(generated_captions, references)
-    #     final_eval_metrics.update(ref_metrics)
+    # Calculate reference-based metrics
+    if references:
+        ref_metrics = calculate_coco_metrics(generated_captions, references)
+        final_eval_metrics.update(ref_metrics)
 
-    #     # BERTScore
-    #     bert_metrics = calculate_bertscore(generated_captions, references)
-    #     final_eval_metrics.update(bert_metrics)
+        # BERTScore
+        bert_metrics = calculate_bertscore(generated_captions, references)
+        final_eval_metrics.update(bert_metrics)
 
-    # else:
-    #     logger.warning("Could not load references, skipping reference-based metrics.")
+    else:
+        logger.warning("Could not load references, skipping reference-based metrics.")
 
     
     # Save the combined evaluation summary
     if final_eval_metrics:
-        eval_output_file = output_path / "clip_score.json"
+        eval_output_file = output_path / "evaluation_summary.json"
         with open(eval_output_file, 'w') as f:
             json.dump(final_eval_metrics, f, indent=4)
         logger.info(f"Evaluation summary saved to {eval_output_file}")

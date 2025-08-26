@@ -10,11 +10,15 @@ import numpy as np
 from torchmetrics.multimodal.clip_score import CLIPScore
 from datasets import load_dataset
 from tqdm import tqdm
+
+from typing import Union
+
 from pycocoevalcap.tokenizer.ptbtokenizer import PTBTokenizer
 from pycocoevalcap.meteor.meteor import Meteor
 from pycocoevalcap.bleu.bleu import Bleu
 from pycocoevalcap.cider.cider import Cider
 from pycocoevalcap.rouge.rouge import Rouge
+from pycocoevalcap.spice.spice import Spice
 
 logger = setup_logger()
 
@@ -53,16 +57,20 @@ def load_nocaps_references(split: str) -> Dict[str, List[str]]:
         return {}
     
     filename_to_captions = {}
+    filename_to_image = {}
     for item in dataset:
         filename = item['image_file_name']
-
-        captions = [ann['caption'] for ann in item['annotations_nocaps']]
+        filename_to_image[filename] = item['image']
+        
+        # Using the corrected key based on your dataset schema
+        captions = item['annotations_captions']
         if filename not in filename_to_captions:
             filename_to_captions[filename] = []
         filename_to_captions[filename].extend(captions)
 
-    logger.info(f"Loaded {len(filename_to_captions)} reference image captions from NoCaps '{split}' split.")
-    return filename_to_captions
+    logger.info(f"Loaded {len(filename_to_captions)} reference captions and {len(filename_to_image)} images from NoCaps '{split}' split.")
+    return filename_to_captions, filename_to_image
+
 
 
 def load_coco_references(reference_path: str) -> Dict[str, List[str]]:
@@ -135,7 +143,7 @@ def calculate_bertscore(
 
 def calculate_clip_score(
     generated_captions_map: Dict[str, List[str]],
-    image_folder: str,
+    images_source: Union[str, Dict[str, Image.Image]],
     batch_size: int = 8
 ) -> Dict[str, float]:
     """
@@ -145,17 +153,23 @@ def calculate_clip_score(
     logger.info("Calculating CLIPScore...")
     results = {}
 
-    # Prepare data
-    image_paths = []
-    captions = []
+    # Prepare images and captions based on the source type
+    images_data, captions = [], []
+    is_folder = isinstance(images_source, (str, Path))
+    
     for img_name, gen_caps in generated_captions_map.items():
-        image_path = Path(image_folder) / img_name
-        if image_path.exists():
-            image_paths.append(str(image_path))
-            captions.append(gen_caps[0])
+        if is_folder:
+            image_path = Path(images_source) / img_name
+            if image_path.exists():
+                images_data.append(image_path)
+                captions.append(gen_caps[0])
+        else: # Assumes dict of PIL images
+            if img_name in images_source:
+                images_data.append(images_source[img_name])
+                captions.append(gen_caps[0])
 
-    if not image_paths:
-        logger.warning("No images found for CLIPScore calculation.")
+    if not images_data:
+        logger.warning("No matching images found for CLIPScore calculation.")
         return {"clip_score_error": "No matching images found."}
 
     # Calculate CLIPScore 
@@ -174,23 +188,23 @@ def calculate_clip_score(
 
         metric = CLIPScore(model_name_or_path=model_name).to(device)
 
-        num_batches = (len(image_paths) + batch_size - 1) // batch_size
+        num_batches = (len(images_data) + batch_size - 1) // batch_size
 
         for i in tqdm(range(num_batches), desc="CLIPScore batches"):
-            batch_paths = image_paths[i*batch_size : (i+1)*batch_size]
+            batch_paths = images_data[i*batch_size : (i+1)*batch_size]
             batch_caps = captions[i*batch_size : (i+1)*batch_size]
 
-            # Load images and convert to tensors
-            images = [Image.open(p).convert("RGB").resize((224, 224)) for p in batch_paths]
-            img_tensors = [torch.from_numpy(np.array(img)).permute(2, 0, 1).float() / 255.0 for img in images]
+            if is_folder:
+                pil_images = [Image.open(p).convert("RGB").resize((224, 224)) for p in batch_paths]
+            else:
+                pil_images = [img.convert("RGB").resize((224, 224)) for img in batch_paths]
 
-            # Update metric with the batch
+            img_tensors = [torch.from_numpy(np.array(img)).permute(2, 0, 1).float() / 255.0 for img in pil_images]
             metric.update(img_tensors, batch_caps)
+            logger.info(f"Processed CLIPScore batch {i+1}/{num_batches}")
 
-            logger.info(f"Processed batch {i+1}/{num_batches}")
-
-        # Compute mean CLIPScore
         results["clip_score"] = round(metric.compute().item(), 4)
+
 
     except RuntimeError as e:
         if "out of memory" in str(e):
@@ -229,6 +243,7 @@ def calculate_coco_metrics(
         (Bleu(4), ["bleu1", "bleu2", "bleu3", "bleu4"]),
         (Meteor(), "meteor"),
         (Rouge(), "rouge_l"),
+        (Spice(), "spice"),
         (Cider(), "cider")
     ]
 
@@ -261,34 +276,43 @@ def main():
     # Load generated captions from the specified results directory
     generated_captions = load_generated_captions(results_path)
     
+    # Dictionary to hold all evaluation scores
+    final_eval_metrics = {}
     # Load the appropriate reference captions
     references = None
     if args.dataset_type == "coco":
         references = load_coco_references(args.reference_path)
+        if args.image_dir:
+            clip_scores = calculate_clip_score(generated_captions, args.image_dir, batch_size=16)
+            final_eval_metrics.update(clip_scores)
+        else:
+            logger.warning("No --image_dir provided for COCO. Skipping CLIPScore calculation.")
+
     elif args.dataset_type == "nocaps":
-        # For NoCaps, reference_path is the split name
-        references = load_nocaps_references(args.reference_path)
-
-    # Dictionary to hold all evaluation scores
-    final_eval_metrics = {}
-
-    # Calculate reference-based metrics
-    if references:
-        ref_metrics = calculate_coco_metrics(generated_captions, references)
-        final_eval_metrics.update(ref_metrics)
-    else:
-        logger.warning("Could not load references, skipping reference-based metrics.")
-
-    # Calculate CLIPScore (reference-free) if image directory is provided
-    if args.image_dir:
-        clip_scores = calculate_clip_score(generated_captions, args.image_dir)
+        # For NoCaps, load both references and images from Hugging Face
+        references, image_map = load_nocaps_references(args.reference_path)
+        # Calculate CLIPScore using the in-memory images
+        clip_scores = calculate_clip_score(generated_captions, image_map, batch_size=16)
         final_eval_metrics.update(clip_scores)
-    else:
-        logger.warning("No --image_dir provided. Skipping CLIPScore calculation.")
+
+
+
+    # # Calculate reference-based metrics
+    # if references:
+    #     ref_metrics = calculate_coco_metrics(generated_captions, references)
+    #     final_eval_metrics.update(ref_metrics)
+
+    #     # BERTScore
+    #     bert_metrics = calculate_bertscore(generated_captions, references)
+    #     final_eval_metrics.update(bert_metrics)
+
+    # else:
+    #     logger.warning("Could not load references, skipping reference-based metrics.")
+
     
     # Save the combined evaluation summary
     if final_eval_metrics:
-        eval_output_file = output_path / "evaluation_summary.json"
+        eval_output_file = output_path / "clip_score.json"
         with open(eval_output_file, 'w') as f:
             json.dump(final_eval_metrics, f, indent=4)
         logger.info(f"Evaluation summary saved to {eval_output_file}")

@@ -9,6 +9,12 @@ from PIL import Image
 import numpy as np
 from torchmetrics.multimodal.clip_score import CLIPScore
 from datasets import load_dataset
+from tqdm import tqdm
+from pycocoevalcap.tokenizer.ptbtokenizer import PTBTokenizer
+from pycocoevalcap.meteor.meteor import Meteor
+from pycocoevalcap.bleu.bleu import Bleu
+from pycocoevalcap.cider.cider import Cider
+from pycocoevalcap.rouge.rouge import Rouge
 
 logger = setup_logger()
 
@@ -99,26 +105,54 @@ def load_coco_references(reference_path: str) -> Dict[str, List[str]]:
             
     return filename_to_captions
 
+def calculate_bertscore(
+    generated_captions_map: Dict[str, List[str]],
+    reference_captions_map: Dict[str, List[str]]
+) -> Optional[Dict[str, float]]:
+    """Calculates BERTScore."""
+    logger.info("Calculating BERTScore...")
+    predictions_flat, references_flat = [], []
+    for img_name, gen_caps in generated_captions_map.items():
+        if img_name in reference_captions_map:
+            predictions_flat.append(gen_caps[0])
+            references_flat.append(reference_captions_map[img_name])
+
+    if not predictions_flat:
+        logger.warning("No matching images found for BERTScore calculation.")
+        return {"bertscore_error": "No matching images."}
+
+    try:
+        bertscore = evaluate.load("bertscore")
+        bert_score_results = bertscore.compute(predictions=predictions_flat, references=references_flat, lang="en")
+        return {
+            "bertscore_precision": round(np.mean(bert_score_results["precision"]), 4),
+            "bertscore_recall": round(np.mean(bert_score_results["recall"]), 4),
+            "bertscore_f1": round(np.mean(bert_score_results["f1"]), 4),
+        }
+    except Exception as e:
+        logger.error(f"BERTScore calculation failed: {e}")
+        return {"bertscore_error": str(e)}
+
 def calculate_clip_score(
     generated_captions_map: Dict[str, List[str]],
-    image_folder: str
+    image_folder: str,
+    batch_size: int = 8
 ) -> Dict[str, float]:
     """
-    Calculates the CLIPScore for a set of images and generated captions.
-    This is a reference-free metric.
+    Calculates CLIPScore for images and captions using batch updates.
+    Automatically handles long captions with LongCLIP if needed.
     """
     logger.info("Calculating CLIPScore...")
     results = {}
-    
-    # Prepare data for CLIPScore ---
+
+    # Prepare data
     image_paths = []
-    predictions_flat = []
+    captions = []
     for img_name, gen_caps in generated_captions_map.items():
         image_path = Path(image_folder) / img_name
         if image_path.exists():
             image_paths.append(str(image_path))
-            # Use the first generated caption for a standard comparison
-            predictions_flat.append(gen_caps[0])
+            captions.append(gen_caps[0])
 
     if not image_paths:
         logger.warning("No images found for CLIPScore calculation.")
@@ -127,121 +161,97 @@ def calculate_clip_score(
     # Calculate CLIPScore 
     try:
         device = "cuda" if torch.cuda.is_available() else "cpu"
-        metric = CLIPScore(model_name_or_path="openai/clip-vit-base-patch16").to(device)
-        
-        images = [Image.open(path).convert("RGB") for path in image_paths]
-        img_tensors = [torch.from_numpy(np.array(img)).permute(2, 0, 1) for img in images]
 
-        # metric.update(img_tensors, predictions_flat)
-        clip_score = metric(img_tensors, predictions_flat)
-        results["clip_score"] = round(clip_score.item(), 4)
-    except Exception as e:
-        logger.error(f"An error occurred during CLIPScore calculation: {e}")
+        # Choose model based on caption length using real token count
+        from transformers import CLIPTokenizer
+        tokenizer = CLIPTokenizer.from_pretrained("openai/clip-vit-base-patch16")
+        max_tokens = max([tokenizer(c, return_tensors="pt").input_ids.shape[1] for c in captions])
+        if max_tokens > 77:
+            logger.info("Caption exceeds 77 tokens. Using LongCLIP model.")
+            model_name = "zer0int/LongCLIP-L-Diffusers"
+        else:
+            model_name = "openai/clip-vit-base-patch16"
+
+        metric = CLIPScore(model_name_or_path=model_name).to(device)
+
+        num_batches = (len(image_paths) + batch_size - 1) // batch_size
+
+        for i in tqdm(range(num_batches), desc="CLIPScore batches"):
+            batch_paths = image_paths[i*batch_size : (i+1)*batch_size]
+            batch_caps = captions[i*batch_size : (i+1)*batch_size]
+
+            # Load images and convert to tensors
+            images = [Image.open(p).convert("RGB").resize((224, 224)) for p in batch_paths]
+            img_tensors = [torch.from_numpy(np.array(img)).permute(2, 0, 1).float() / 255.0 for img in images]
+
+            # Update metric with the batch
+            metric.update(img_tensors, batch_caps)
+
+            logger.info(f"Processed batch {i+1}/{num_batches}")
+
+        # Compute mean CLIPScore
+        results["clip_score"] = round(metric.compute().item(), 4)
+
+    except RuntimeError as e:
+        if "out of memory" in str(e):
+            logger.error("CUDA out of memory. Reduce batch_size or resize images.")
         results["clip_score_error"] = str(e)
-        
+    except Exception as e:
+        logger.error(f"Error during CLIPScore calculation: {e}")
+        results["clip_score_error"] = str(e)
+
     return results
 
-def calculate_reference_based_metrics(
+def calculate_coco_metrics(
     generated_captions_map: Dict[str, List[str]],
-    reference_captions_path: Optional[str]
-) -> Optional[Dict[str, float]]:
+    reference_captions_map: Dict[str, List[str]]
+) -> Dict[str, float]:
     """
-    Calculates BLEU, ROUGE, and BERTScore metrics against COCO references.
+    Calculates BLEU, ROUGE, CIDEr, and METEOR using pycocoevalcap.
     """
-    if not reference_captions_path:
-        logger.warning("No reference captions path provided. Skipping evaluation.")
-        return None
-        
-    logger.info("Loading and parsing COCO reference captions...")
-    references = load_coco_references(reference_captions_path)
-    if not references:
-        logger.error("Failed to load reference captions. Aborting evaluation.")
-        return {"error": "Failed to load or parse reference captions file."}
+    logger.info("Calculating COCO captioning metrics (BLEU, ROUGE, CIDEr, METEOR)...")
+    if not generated_captions_map or not reference_captions_map:
+        return {"coco_metrics_error": "Empty generated or reference captions."}
 
-    # Align predictions and references based on image filenames
-    predictions_flat = []
-    references_flat = []
+    # Convert to COCOEvalCap style dicts
+    gts, res = {}, {}
+    for i, (img_name, gen_caps) in enumerate(generated_captions_map.items()):
+        if img_name in reference_captions_map:
+            gts[i] = [{"caption": cap} for cap in reference_captions_map[img_name]]
+            res[i] = [{"caption": gen_caps[0]}]  # only one genearated caption per image
 
-    for img_name, gen_caps in generated_captions_map.items():
-        if img_name in references:
-            # We use the first generated caption for a standard comparison
-            predictions_flat.append(gen_caps[0])
-            references_flat.append(references[img_name])
+    # Tokenize captions (COCO-style preprocessing)
+    tokenizer = PTBTokenizer()
+    gts_tok = tokenizer.tokenize(gts)
+    res_tok = tokenizer.tokenize(res)
 
-    if not predictions_flat:
-        return {"error": "No matching images found between generated and reference sets."}
+    scorers = [
+        (Bleu(4), ["bleu1", "bleu2", "bleu3", "bleu4"]),
+        (Meteor(), "meteor"),
+        (Rouge(), "rouge_l"),
+        (Cider(), "cider")
+    ]
 
-    logger.info(f"Evaluating metrics for {len(predictions_flat)} matched images.")
-    try:
-        bleu = evaluate.load("sacrebleu")
-        rouge = evaluate.load("rouge")
-        bertscore = evaluate.load("bertscore")
-        
-        results = {}
-        # Compute all scores
-        bleu_score = bleu.compute(predictions=predictions_flat, references=references_flat)
-        rouge_score = rouge.compute(predictions=predictions_flat, references=references_flat)
-        bert_score = bertscore.compute(predictions=predictions_flat, references=references_flat, lang="en")
+    final_scores = {}
+    for scorer, method in scorers:
+        score, scores = scorer.compute_score(gts_tok, res_tok)
+        if isinstance(method, list):  # BLEU returns 4 numbers
+            for m, s in zip(method, score):
+                final_scores[m] = round(s, 4)
+        else:
+            final_scores[method] = round(score, 4)
 
-        results = {
-            "bleu": {
-                "score": bleu_score["score"],
-                "precisions": bleu_score["precisions"],
-                "brevity_penalty": bleu_score["bp"],
-                "system_length": bleu_score["sys_len"],
-                "reference_length": bleu_score["ref_len"]
-            },
-            "rouge": {
-                "rouge1": rouge_score["rouge1"],
-                "rouge2": rouge_score["rouge2"],
-                "rougeL": rouge_score["rougeL"],
-                "rougeLsum": rouge_score["rougeLsum"]
-            },
-            "bertscore": {
-                # Average scores for a single summary number
-                "precision": sum(bert_score["precision"]) / len(bert_score["precision"]),
-                "recall": sum(bert_score["recall"]) / len(bert_score["recall"]),
-                "f1": sum(bert_score["f1"]) / len(bert_score["f1"])
-            }
-        }
+    return final_scores
 
-        return results
-    except Exception as e:
-        logger.error(f"An error occurred during metric calculation: {e}")
-        return {"error": str(e)}
     
 def main():
     """Main function to run standalone evaluation."""
     parser = argparse.ArgumentParser(description="Run standalone evaluation for image captioning results.")
-    parser.add_argument(
-        "--results_dir",
-        type=str,
-        required=True,
-        help="Path to the output directory containing the 'results.json' file."
-    )
-    parser.add_argument(
-        "--dataset_type",
-        type=str,
-        required=True,
-        choices=["coco", "nocaps"],
-        help="The type of dataset to evaluate against ('coco' or 'nocaps')."
-    )
-    parser.add_argument(
-        "--reference_path",
-        type=str,
-        required=True,
-        help="Path to the COCO reference JSON file, OR the split name for NoCaps (e.g., 'validation')."
-    )
-    parser.add_argument(
-        "--image_dir",
-        type=str,
-        help="Path to the directory with original images (required for CLIPScore)."
-    )
-    parser.add_argument(
-        "--output_dir",
-        type=str,
-        help="Directory to save the evaluation summary. Defaults to --results_dir."
-    )
+    parser.add_argument("--results_dir", type=str, required=True, help="Path to the output directory containing the 'results.json' file.")
+    parser.add_argument("--dataset_type", type=str, required=True, choices=["coco", "nocaps"], help="The type of dataset to evaluate against ('coco' or 'nocaps').")
+    parser.add_argument("--reference_path", type=str, required=True, help="Path to the COCO reference JSON file, OR the split name for NoCaps (e.g., 'validation').")
+    parser.add_argument("--image_dir", type=str, help="Path to the directory with original images (required for CLIPScore).")
+    parser.add_argument("--output_dir", type=str,help="Directory to save the evaluation summary. Defaults to --results_dir.")
     args = parser.parse_args()
     
     results_path = Path(args.results_dir)
@@ -264,7 +274,7 @@ def main():
 
     # Calculate reference-based metrics
     if references:
-        ref_metrics = calculate_reference_based_metrics(generated_captions, references)
+        ref_metrics = calculate_coco_metrics(generated_captions, references)
         final_eval_metrics.update(ref_metrics)
     else:
         logger.warning("Could not load references, skipping reference-based metrics.")

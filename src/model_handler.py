@@ -39,98 +39,105 @@ def load_model(
                 dtype = torch.float16
         elif dtype_str == "float16":
             dtype = torch.float16
+    try:
+        if model_type == "blip":
+            processor = BlipProcessor.from_pretrained(model_id, use_fast=True)
+            model = BlipForConditionalGeneration.from_pretrained(
+                model_id, torch_dtype=dtype, 
+                device_map='auto'
+            )
 
-    if model_type == "blip":
-        processor = BlipProcessor.from_pretrained(model_id, use_fast=True)
-        model = BlipForConditionalGeneration.from_pretrained(
-            model_id, torch_dtype=dtype, 
-            device_map='auto'
-        )
+        elif model_type == "blip2":
+            processor = Blip2Processor.from_pretrained(model_id, use_fast=True)
+            model = Blip2ForConditionalGeneration.from_pretrained(
+                model_id, torch_dtype=dtype, 
+                device_map='auto'
+            ).to(device)
 
-    elif model_type == "blip2":
-        processor = Blip2Processor.from_pretrained(model_id, use_fast=True)
-        model = Blip2ForConditionalGeneration.from_pretrained(
-            model_id, torch_dtype=dtype, 
-            device_map='auto'
-        ).to(device)
+        elif model_type == "llava":
+            processor = AutoProcessor.from_pretrained(model_id, use_fast=True)
+            model = LlavaForConditionalGeneration.from_pretrained(
+                model_id, torch_dtype=dtype, 
+                device_map='auto'
+            )
 
-    elif model_type == "llava":
-        processor = AutoProcessor.from_pretrained(model_id, use_fast=True)
-        model = LlavaForConditionalGeneration.from_pretrained(
-            model_id, torch_dtype=dtype, 
-            device_map='auto'
-        )
+        elif model_type == "qwen":
+            bnb_config = BitsAndBytesConfig(load_in_8bit=True,)
+            processor = processor = AutoProcessor.from_pretrained(model_id, use_fast=True)
+            model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
+                model_id, quantization_config=bnb_config, 
+                device_map='auto',
+                # attn_implementation="flash_attention_2"
+            )
 
-    elif model_type == "qwen":
-        bnb_config = BitsAndBytesConfig(load_in_8bit=True,)
-        processor = processor = AutoProcessor.from_pretrained(model_id, use_fast=True)
-        model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
-            model_id, quantization_config=bnb_config, 
-            device_map='auto',
-            # attn_implementation="flash_attention_2"
-        )
+        elif model_type == "smolvlm":
+            processor = AutoProcessor.from_pretrained(model_id)
+            model = AutoModelForVision2Seq.from_pretrained(
+                model_id, torch_dtype=dtype, 
+                device_map='auto'
+            )
 
-    elif model_type == "smolvlm":
-        processor = AutoProcessor.from_pretrained(model_id)
-        model = AutoModelForVision2Seq.from_pretrained(
-            model_id, torch_dtype=dtype, 
-            device_map='auto'
-        )
+        else:  # generic fallback
+            processor = AutoProcessor.from_pretrained(model_id, use_fast=True)
+            model = AutoModelForVision2Seq.from_pretrained(
+                model_id, torch_dtype=dtype, 
+                device_map='auto'
+            )
 
-    else:  # generic fallback
-        processor = AutoProcessor.from_pretrained(model_id, use_fast=True)
-        model = AutoModelForVision2Seq.from_pretrained(
-            model_id, torch_dtype=dtype, 
-            device_map='auto'
-        )
+        return processor, model
 
-    return processor, model
+    except Exception as e:
+        logger.error(f"Error loading model {model_id} of type {model_type}: {e}")
+        raise e
 
 def prepare_inputs(processor, image, prompt, model_type, device, dtype):
     """
     Normalize inputs across BLIP, BLIP2, LLaVA, SmolVLM Qwen-VL families.
     """
-    if model_type in ["llava", "smolvlm"]:
-        conversation = [
-            {
-                "role": "user",
-                "content": [
-                    {"type": "text", "text": prompt},
-                    {"type": "image"},
-                ],
-            },
-        ]
-        chat_prompt = processor.apply_chat_template(conversation, add_generation_prompt=True)
-        inputs = processor(images=image, text=chat_prompt, return_tensors="pt").to(device, dtype)
-        return inputs
+    try:
+        if model_type in ["llava", "smolvlm"]:
+            conversation = [
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": prompt},
+                        {"type": "image"},
+                    ],
+                },
+            ]
+            chat_prompt = processor.apply_chat_template(conversation, add_generation_prompt=True)
+            inputs = processor(images=image, text=chat_prompt, return_tensors="pt").to(device, dtype)
+            return inputs
 
-    elif model_type == "qwen":
-        from qwen_vl_utils import process_vision_info
+        elif model_type == "qwen":
+            from qwen_vl_utils import process_vision_info
 
-        messages = [
-            {
-                "role": "user",
-                "content": [
-                    {"type": "image", "image": image},
-                    {"type": "text", "text": prompt},
-                ],
-            }
-        ]
-        text = processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-        image_inputs, _ = process_vision_info(messages)
-        inputs = processor(
-            text=[text],
-            images=image_inputs,
-            padding=True,
-            return_tensors="pt",
-        )
-        return inputs.to(device)
+            messages = [
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "image", "image": image},
+                        {"type": "text", "text": prompt},
+                    ],
+                }
+            ]
+            text = processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+            image_inputs, _ = process_vision_info(messages)
+            inputs = processor(
+                text=[text],
+                images=image_inputs,
+                padding=True,
+                return_tensors="pt",
+            )
+            return inputs.to(device)
 
-    else:
-        # Generic processor call
-        return processor(images=image, text=prompt, return_tensors="pt").to(device, dtype)
-        # raise ValueError(f"Unsupported model_type: {model_type}")
-
+        else:
+            # Generic processor call
+            return processor(images=image, text=prompt, return_tensors="pt").to(device, dtype)
+            # raise ValueError(f"Unsupported model_type: {model_type}")
+    except Exception as e:
+        logger.error(f"Error preparing inputs for model type {model_type}: {e}")
+        raise e
 
 
 def generate_captions(

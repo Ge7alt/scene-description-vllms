@@ -24,8 +24,9 @@ torch.manual_seed(SEED)
 def main():
     """Main function to run the image captioning pipeline."""
     parser = argparse.ArgumentParser(description="Run the image captioning pipeline.")
+    parser.add_argument("--image_folder", type=str, default=None, help="Path to a folder of images for caption generation (overrides dataset options).")
     parser.add_argument("--config", type=str, required=True,help="Path to the YAML model configuration file.")
-    parser.add_argument("--dataset", type=str, required=True, choices=["coco", "nocaps"], help="Dataset to use: 'coco' or 'nocaps'.")
+    parser.add_argument("--dataset", type=str, choices=["coco", "nocaps"], help="Dataset to use: 'coco' or 'nocaps'.")
     parser.add_argument("--nocaps_split", type=str, default="validation", choices=["validation", "test"], help="Split for NoCaps dataset if selected.")
     parser.add_argument("--coco_path", type=str, default=None, help="Path to COCO images (required if dataset==coco).")
     args = parser.parse_args()
@@ -37,9 +38,18 @@ def main():
     
     # Create a unique output directory based on the model name from the config
     model_name_path = config.model.id.replace("/", "_")
-    dataset_name = Path(args.dataset).name
+    # dataset_name = Path(args.dataset).name
+
+    if args.image_folder:
+        run_name = f"custom_{Path(args.image_folder).name}"
+    elif args.dataset:
+        run_name = Path(args.dataset).name
+    else:
+        raise ValueError("You must provide either --image_folder or --dataset.")
+    
     run_timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    output_path = Path(config.paths.output_dir) / f"{model_name_path}_{dataset_name}_{run_timestamp}"
+    # output_path = Path(config.paths.output_dir) / f"{model_name_path}_{dataset_name}_{run_timestamp}"
+    output_path = Path(config.paths.output_dir) / f"{model_name_path}_{run_name}_{run_timestamp}"
     viz_path = output_path / "visualizations"
     output_path.mkdir(parents=True, exist_ok=True)
     viz_path.mkdir(exist_ok=True)
@@ -55,22 +65,49 @@ def main():
         config.model.torch_dtype
     )
     # ========= Load Data =========
-    if args.dataset == "coco":
-        if not args.coco_path:
-            raise ValueError("For COCO dataset, --coco_path must be provided.")
-        logger.info(f"Loading COCO images from {args.coco_path}")
-        image_items = get_image_paths(args.coco_path)
+    # if args.dataset == "coco":
+    #     if not args.coco_path:
+    #         raise ValueError("For COCO dataset, --coco_path must be provided.")
+    #     logger.info(f"Loading COCO images from {args.coco_path}")
+    #     image_items = get_image_paths(args.coco_path)
 
-    elif args.dataset == "nocaps":
-        logger.info(f"Loading NoCaps dataset ({args.nocaps_split} split) from HuggingFace")
-        nocaps_ds = load_dataset("HuggingFaceM4/NoCaps", split=args.nocaps_split)
-        # Store images and filenames in a list
-        image_items = [(item["image"], item["image_file_name"]) for item in nocaps_ds]
+    # elif args.dataset == "nocaps":
+    #     logger.info(f"Loading NoCaps dataset ({args.nocaps_split} split) from HuggingFace")
+    #     nocaps_ds = load_dataset("HuggingFaceM4/NoCaps", split=args.nocaps_split)
+    #     # Store images and filenames in a list
+    #     image_items = [(item["image"], item["image_file_name"]) for item in nocaps_ds]
+    image_items = []
+    run_mode = ""
+    if args.image_folder:
+        logger.info(f"Loading images from custom folder: {args.image_folder}")
+        image_items = get_image_paths(args.image_folder)
+        run_mode = "folder"
+        # For a custom folder, process all images
+        images_to_process = image_items[:1]
+        logger.info(f"Found {len(images_to_process)} images to process.")
+
+    elif args.dataset:
+        if args.dataset == "coco":
+            if not args.coco_path:
+                raise ValueError("For COCO dataset, --coco_path must be provided.")
+            logger.info(f"Loading COCO images from {args.coco_path}")
+            image_items = get_image_paths(args.coco_path)
+            run_mode = "coco"
+        elif args.dataset == "nocaps":
+            logger.info(f"Loading NoCaps dataset ({args.nocaps_split} split) from HuggingFace")
+            nocaps_ds = load_dataset("HuggingFaceM4/NoCaps", split=args.nocaps_split)
+            image_items = [(item["image"], item["image_file_name"]) for item in nocaps_ds]
+            run_mode = "nocaps"
+        
+        # For datasets, take a random sample for evaluation
+        num_to_sample = 200
+        images_to_process = random.sample(image_items, num_to_sample) if len(image_items) > num_to_sample else image_items
+        logger.info(f"Randomly selected {len(images_to_process)} images for evaluation.")
 
     # logger.info(f"Loading images from: {config.paths.image_folder}")
     # image_items = get_image_paths(config.paths.image_folder)
     # images_to_process = random.sample(image_items, 100) if len(image_items) > 100 else image_items
-    images_to_process = random.sample(image_items, 5) if len(image_items) > 1 else image_items
+    # images_to_process = random.sample(image_items, 5) if len(image_items) > 1 else image_items
 
     # ========= Main Generation Loop =========
     results = {"per_image_metrics": {}}
@@ -80,12 +117,12 @@ def main():
             # logger.info(f"Processing image {i+1}/{len(image_items)}: {image_path.name}")
             # image = load_image(image_path)
             # Load image and assign an ID or name for both datasets
-            if args.dataset == "coco":
+            if run_mode in  ["coco", "folder"]:
                 image_path = img_item
                 image = load_image(image_path)
                 image_id = image_path.name
-                logger.info(f"Processing COCO image {i+1}/{len(image_items)}: {image_id}")
-            elif args.dataset == "nocaps":
+                logger.info(f"Processing image {i+1}/{len(image_items)}: {image_id}")
+            elif run_mode == "nocaps":
                 image, image_id = img_item  # img_item is (PIL.Image, filename)
                 logger.info(f"Processing NoCaps image {i+1}/{len(image_items)}: {image_id}")
 
@@ -125,42 +162,6 @@ def main():
     with open(output_json_path, 'w') as f:
         json.dump(results, f, indent=4)
     logger.info(f"Results saved to {output_json_path}")
-
-    # =================== Final Evaluation ===================
-    # logger.info("Starting final evaluation...")
-    
-    # # Prepare generated captions in the required format
-    # generated_captions_map = {
-    #     k: v["captions"] for k, v in results["per_image_metrics"].items()
-    # }
-    
-    # # Dictionary to hold all evaluation scores
-    # final_eval_metrics = {}
-
-    # # Calculate CLIPScore (reference-free)
-    # clip_scores = calculate_clip_score(
-    #     generated_captions_map=generated_captions_map,
-    #     image_folder=config.paths.image_folder
-    # )
-    # final_eval_metrics.update(clip_scores)
-
-    # # Calculate reference-based metrics
-    # if config.evaluation.get("reference_captions_path"):
-    #     ref_metrics = calculate_reference_based_metrics(
-    #         generated_captions_map=generated_captions_map,
-    #         reference_captions_path=config.evaluation.reference_captions_path
-    #     )
-    #     final_eval_metrics.update(ref_metrics)
-    # else:
-    #     logger.warning("No reference_captions_path in config. Skipping reference-based metrics.")
-
-    # # Save the combined evaluation summary
-    # if final_eval_metrics:
-    #     eval_output_path = output_path / "evaluation_summary.json"
-    #     with open(eval_output_path, 'w') as f:
-    #         json.dump(final_eval_metrics, f, indent=4)
-    #     logger.info(f"Evaluation summary saved to {eval_output_path}")
-    #     logger.info(f"Combined Evaluation Metrics: {final_eval_metrics}")
             
     logger.info("Pipeline finished successfully.")
 

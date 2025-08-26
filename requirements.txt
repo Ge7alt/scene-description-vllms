@@ -7,6 +7,7 @@ evaluate==0.4.5
 hf-xet==1.1.8
 huggingface-hub==0.34.4
 python-dotenv==1.1.1
+pycocoevalcap==1.2
 matplotlib==3.10.5
 numpy==2.1.2
 pandas==2.3.1

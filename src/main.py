@@ -100,8 +100,7 @@ def main():
     results["model_name"] = config.model.id
     with PerformanceTracker(device=config.model.device) as tracker:
         for i, img_item in enumerate(images_to_process):
-            logger.info(f"Processing image {i+1}/{len(image_items)}: {image_path.name}")
-            # image = load_image(image_path)
+
             # Load image and assign an ID or name for both datasets
             if run_mode in  ["coco", "folder"]:
                 image_path = img_item

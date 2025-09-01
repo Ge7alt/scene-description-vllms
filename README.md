@@ -141,7 +141,7 @@ Based on the models evaluated in this analysis, the following conclusions can be
 
 * **Efficiency:** The **BLIP** models are by far the fastest and most efficient in terms of latency and throughput.
 
-* **Resource Usage:** The larger instruction-tuned models, LLaVA and BLIP2, consume significantly more GPU memory. In contrast, **Qwen-VL** has a remarkably low memory footprint for its size, a result of being loaded with 8-bit quantization (`load_in_8bit=True`). However, this memory saving comes at a severe performance cost, as the quantization process leads to an extremely high latency, making it the slowest model by a large margin.
+* **Resource Usage:** The larger instruction-tuned models, LLaVA and BLIP2, consume significantly more GPU memory. In contrast, **Qwen-VL** has a remarkably low memory footprint for its size, a result of being loaded with 8-bit quantization (`load_in_8bit=True`).
 
 
 ### Quantitative Evaluation Metrics

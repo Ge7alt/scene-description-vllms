@@ -15,6 +15,7 @@ numpy==2.1.2
 pandas==2.3.1
 pillow==11.0.0
 python-dotenv==1.1.1
+qwen-vl-utils
 requests==2.32.5
 rouge-score==0.1.2
 sacrebleu==2.5.1
